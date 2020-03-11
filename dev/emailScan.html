@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <title>Sweepy Barcode Scanner Companion</title>
+    <script type="text/javascript">
+              document.getElementById("mailtoLink").text="Barcode Goes Here!";
+
+      function stBrowserDidScanBarcode(type, data, stid) {
+/*          alert(data); */
+/*          document.getElementById("mailtoLink").innerText=data; */
+/*          document.getElementById("mailtoLink").href= "mailto:user@domain.tld?subject=Barcode&body=" + data; */
+          document.getElementById("barcodeList").innerHTML = document.getElementById("barcodeList").innerHTML + "<br>" + data;
+	  }
+    </script>
+  </head>
+  <body>
+    <!--h1>Barcode: <a href="#" id="mailtoLink">Value</a></h1-->
+    <!--h1>Test: <a href="mailto:someone@example.com?Subject=Hello%20again" id="mailtoLink">Value</a></h1-->
+    <h1 id="barcodeList">Barcodes:</h1>
+  </body>
+</html>
