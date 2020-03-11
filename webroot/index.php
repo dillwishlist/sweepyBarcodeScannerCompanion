@@ -89,10 +89,7 @@ echo("
 ?>
 <?php
 
-define("debug",false);
-
-$baseDomain = "lansweeper.local";
-$baseLSURL = "https://" . $baseDomain . "/asset.aspx?AssetID=";
+$baseLSURL = "https://" . $cfg['baseDomain'] . "/asset.aspx?AssetID=";
 $containerAssetRelationshipType = "5";
 
 		    $explodedBarcode = explode("_",$barcodeValue);
@@ -103,7 +100,7 @@ if ($inventoryRoom)
 	    echo("<h3>Inventory Mode</h3>");
 	}
 
-if ($explodedBarcode[0] == "ROOM" && $inventoryRoom == false)
+if ($explodedBarcode[0] == $cfg['roomPrefix'] && $inventoryRoom == false)
 	{
 		$inventoryRoom = true;
 		echo("<h1>Inventory Set</h1>");
@@ -112,7 +109,7 @@ if ($explodedBarcode[0] == "ROOM" && $inventoryRoom == false)
 		$inventoryDepartment = $explodedBarcode[3];
 		$inventoryBranchoffice = $explodedBarcode[4];
 	}
-elseif ($explodedBarcode[0] == "ROOM" && $inventoryRoom == true)
+elseif ($explodedBarcode[0] == $cfg['roomPrefix'] && $inventoryRoom == true)
 	{
 		$inventoryRoom = false;
 		echo("<h1>Inventory Unset</h1>");
@@ -122,9 +119,9 @@ elseif ($explodedBarcode[0] == "ROOM" && $inventoryRoom == true)
 		$inventoryBranchoffice = false;
 	}
 elseif ($barcodeValue) {
-	$assetID = GetAssetID($barcodeValue,$baseDomain);
+	$assetID = GetAssetID($barcodeValue,$cfg['baseDomain']);
 	if ($assetID) {
-		$assetType = GetAssetType($assetID,$baseDomain);
+		$assetType = GetAssetType($assetID,$cfg['baseDomain']);
 		if ($assetType == 901 || $assetType == 908)
 		{
 			if ($assetID == $assetRelationParentID)
@@ -136,8 +133,8 @@ elseif ($barcodeValue) {
 
 			} else {
 				echo("<h1>Container Set</h1>");
-				SetAssetCustomBarcodeScanTime($assetID,$baseDomain);
-				InsertAssetCommentBarcodeScanTime($assetID,$baseDomain);
+				SetAssetCustomBarcodeScanTime($assetID,$cfg['baseDomain']);
+				InsertAssetCommentBarcodeScanTime($assetID,$cfg['baseDomain']);
 				EchoAssetLinks($baseLSURL,$assetID);
 				$addContainerAssetRelation = true;
 				$assetRelationParentID = $assetID;
@@ -146,19 +143,19 @@ elseif ($barcodeValue) {
 			if ($addContainerAssetRelation)
 			{
 				echo("<h1>Adding Asset Relationship</h1>");
-				SetAssetCustomBarcodeScanTime($assetID,$baseDomain);
-				InsertAssetCommentBarcodeScanTime($assetID,$baseDomain);
+				SetAssetCustomBarcodeScanTime($assetID,$cfg['baseDomain']);
+				InsertAssetCommentBarcodeScanTime($assetID,$cfg['baseDomain']);
 				EchoAssetLinks($baseLSURL,$assetID);
-				AddAssetRelationToParent($assetID,$assetRelationParentID,$baseDomain,$containerAssetRelationshipType);
+				AddAssetRelationToParent($assetID,$assetRelationParentID,$cfg['baseDomain'],$containerAssetRelationshipType);
 			} else {
 				if ($inventoryRoom)
 					{
-						UpdateAssetInventory($assetID,$inventoryLocation,$inventoryBuilding,$inventoryDepartment,$inventoryBranchoffice,$baseDomain);
+						UpdateAssetInventory($assetID,$inventoryLocation,$inventoryBuilding,$inventoryDepartment,$inventoryBranchoffice,$cfg['baseDomain']);
 					}
-				SetAssetCustomBarcodeScanTime($assetID,$baseDomain);
-				InsertAssetCommentBarcodeScanTime($assetID,$baseDomain);
+				SetAssetCustomBarcodeScanTime($assetID,$cfg['baseDomain']);
+				InsertAssetCommentBarcodeScanTime($assetID,$cfg['baseDomain']);
 				EchoAssetLinks($baseLSURL,$assetID);
-				PrintAssetInventoryInfo(GetAssetInventoryInfo($assetID,$baseDomain));
+				PrintAssetInventoryInfo(GetAssetInventoryInfo($assetID,$cfg['baseDomain']));
 			}
 		}
 	} else { echo("<p>Barcode Invalid!</p>"); }
@@ -178,22 +175,22 @@ function PrintAssetExplosion($explodedBarcode)
 		    echo("<p>Branchoffice: " . $explodedBarcode[4] . "\n</p>");
 	}
 
-function AddAssetRelationToParent($assetID,$assetRelationParentID,$baseDomain,$containerAssetRelationshipType)
+function AddAssetRelationToParent($assetID,$assetRelationParentID,$cfg['baseDomain'],$containerAssetRelationshipType)
 	{
-		if (!CheckAssetRelationToParent($assetID,$assetRelationParentID,$baseDomain,$containerAssetRelationshipType))
+		if (!CheckAssetRelationToParent($assetID,$assetRelationParentID,$cfg['baseDomain'],$containerAssetRelationshipType))
 		{
-		echo("<h1>" . CheckAssetRelationToParent($assetID,$assetRelationParentID,$baseDomain,$containerAssetRelationshipType) . "</h1>");
+		echo("<h1>" . CheckAssetRelationToParent($assetID,$assetRelationParentID,$cfg['baseDomain'],$containerAssetRelationshipType) . "</h1>");
 		echo("<!-- Relation Does Not Exist -->");
         try
         {
-            $conn = OpenConnection($baseDomain);
+            $conn = OpenConnection($cfg['baseDomain']);
             $tsql = "INSERT INTO dbo.tblAssetRelations (ParentAssetID,ChildAssetID,Type) values (" . $assetRelationParentID . "," . $assetID . "," . $containerAssetRelationshipType . ")";
             $getAsset = sqlsrv_query($conn, $tsql);
             if ($getAsset == FALSE)
                 die(sqlsrv_errors());
             sqlsrv_free_stmt($getAsset);
             sqlsrv_close($conn);
-			InsertAssetCommentBarcodeScanTime($assetID,$baseDomain,("Inside Asset " . $assetRelationParentID));
+			InsertAssetCommentBarcodeScanTime($assetID,$cfg['baseDomain'],("Inside Asset " . $assetRelationParentID));
         }
         catch(Exception $e)
         {
@@ -202,11 +199,11 @@ function AddAssetRelationToParent($assetID,$assetRelationParentID,$baseDomain,$c
         } else { echo("<!-- Relation Exists -->"); }
 	}
 
-function CheckAssetRelationToParent($assetID,$assetRelationParentID,$baseDomain,$containerAssetRelationshipType)
+function CheckAssetRelationToParent($assetID,$assetRelationParentID,$cfg['baseDomain'],$containerAssetRelationshipType)
 	{
         try
         {
-            $conn = OpenConnection($baseDomain);
+            $conn = OpenConnection($cfg['baseDomain']);
             $tsql = "SELECT LastChanged from dbo.tblAssetRelations WHERE ParentAssetID = " . $assetRelationParentID . " AND ChildAssetID = " . $assetID . " AND Type = " . $containerAssetRelationshipType;
             $getAsset = sqlsrv_query($conn, $tsql);
             if ($getAsset == FALSE)
@@ -261,14 +258,14 @@ function PrintAssetInventoryInfo($assetInfoArray)
 	}
 
 
-function OpenConnection($baseDomain)
+function OpenConnection($cfg['baseDomain'])
     {
         try
         {
-//            $serverName = "tcp:" . $baseDomain . ",1433";
+//            $serverName = "tcp:" . $cfg['baseDomain'] . ",1433";
 			$serverName = "lansweeper.local";
             $connectionOptions = array("Database"=>"lansweeperdb",
-                "Uid"=>"sqluser", "PWD"=>"sqlpassword");
+                "Uid"=>$cfg['sqluser'], "PWD"=>$cfg['sqlpass']);
             $conn = sqlsrv_connect($serverName, $connectionOptions);
             if($conn == false)
                 die(sqlsrv_errors());
@@ -290,11 +287,11 @@ function Alert($message)
 }
 
 
-function GetAssetID($barcodeValue,$baseDomain)
+function GetAssetID($barcodeValue,$cfg['baseDomain'])
     {
         try
         {
-            $conn = OpenConnection($baseDomain);
+            $conn = OpenConnection($cfg['baseDomain']);
             $barcodeString = "'%" . ($str = ltrim($barcodeValue, '0')) . "%'";
             $tsql = "SELECT AssetID FROM dbo.tblAssetCustom where BarCode LIKE " . $barcodeString;
             $getAsset = sqlsrv_query($conn, $tsql);
@@ -316,11 +313,11 @@ function GetAssetID($barcodeValue,$baseDomain)
         }
     }
 
-function GetAssetInfo($assetId,$baseDomain)
+function GetAssetInfo($assetId,$cfg['baseDomain'])
     {
         try
         {
-            $conn = OpenConnection($baseDomain);
+            $conn = OpenConnection($cfg['baseDomain']);
             $tsql = "SELECT AssetName FROM dbo.tblAssets where AssetID=" . $assetId;
             $getAsset = sqlsrv_query($conn, $tsql);
             if ($getAsset == FALSE)
@@ -341,11 +338,11 @@ function GetAssetInfo($assetId,$baseDomain)
         }
     }
 
-function GetAssetInventoryInfo($assetId,$baseDomain)
+function GetAssetInventoryInfo($assetId,$cfg['baseDomain'])
     {
         try
         {
-            $conn = OpenConnection($baseDomain);
+            $conn = OpenConnection($cfg['baseDomain']);
             $tsql = "SELECT dbo.tblAssets.AssetName,dbo.tblAssetCustom.Location,dbo.tblAssetCustom.Building,dbo.tblAssetCustom.Department,dbo.tblAssetCustom.Branchoffice FROM dbo.tblAssets inner join dbo.tblAssetCustom on dbo.tblAssets.AssetID=dbo.tblAssetCustom.AssetID where dbo.tblAssets.AssetID=" . $assetId;
             $getAsset = sqlsrv_query($conn, $tsql);
             if ($getAsset == FALSE)
@@ -366,11 +363,11 @@ function GetAssetInventoryInfo($assetId,$baseDomain)
         }
     }
 
-function UpdateAssetInventory($assetID,$assetLocation,$assetBuilding,$assetDepartment,$assetBranchoffice,$baseDomain)
+function UpdateAssetInventory($assetID,$assetLocation,$assetBuilding,$assetDepartment,$assetBranchoffice,$cfg['baseDomain'])
     {
         try
         {
-            $conn = OpenConnection($baseDomain);
+            $conn = OpenConnection($cfg['baseDomain']);
             $tsql = "UPDATE dbo.tblAssetCustom SET dbo.tblAssetCustom.Location='" . $assetLocation . "',dbo.tblAssetCustom.Building='" . $assetBuilding . "',dbo.tblAssetCustom.Department='" . $assetDepartment . "',dbo.tblAssetCustom.Branchoffice='" . $assetBranchoffice . "' where AssetID=" . $assetID;
             if(debug){echo("SQL: " . $tsql);}
             $getAsset = sqlsrv_query($conn, $tsql);
@@ -385,11 +382,11 @@ function UpdateAssetInventory($assetID,$assetLocation,$assetBuilding,$assetDepar
         }
     }
 
-function GetAssetType($assetID,$baseDomain)
+function GetAssetType($assetID,$cfg['baseDomain'])
     {
         try
         {
-            $conn = OpenConnection($baseDomain);
+            $conn = OpenConnection($cfg['baseDomain']);
             $tsql = "SELECT Assettype FROM dbo.tblAssets where AssetID=" . $assetID;
             $getAsset = sqlsrv_query($conn, $tsql);
             if ($getAsset == FALSE)
@@ -408,11 +405,11 @@ function GetAssetType($assetID,$baseDomain)
         }
     }
 
-function SetAssetCustomBarcodeScanTime($assetID,$baseDomain)
+function SetAssetCustomBarcodeScanTime($assetID,$cfg['baseDomain'])
     {
         try
         {
-            $conn = OpenConnection($baseDomain);
+            $conn = OpenConnection($cfg['baseDomain']);
             $tsql = "UPDATE dbo.tblAssetCustom SET Custom15 = CURRENT_TIMESTAMP where AssetID=" . $assetID;
             $getAsset = sqlsrv_query($conn, $tsql);
             if ($getAsset == FALSE)
@@ -426,11 +423,11 @@ function SetAssetCustomBarcodeScanTime($assetID,$baseDomain)
         }
     }
 
-function InsertAssetCommentBarcodeScanTime($assetID,$baseDomain,$comment="Barcode Scanned")
+function InsertAssetCommentBarcodeScanTime($assetID,$cfg['baseDomain'],$comment="Barcode Scanned")
     {
         try
         {
-            $conn = OpenConnection($baseDomain);
+            $conn = OpenConnection($cfg['baseDomain']);
             $tsql = "INSERT INTO dbo.tblAssetComments (AssetID,Comment,AddedBy) values (" . $assetID . ",'" . $comment . "','SBSC')";
             $getAsset = sqlsrv_query($conn, $tsql);
             if ($getAsset == FALSE)

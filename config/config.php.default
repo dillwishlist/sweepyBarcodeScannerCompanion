@@ -1,0 +1,9 @@
+<?php
+
+declare(debug=false);
+
+$cfg['sqluser'] = '';
+$cfg['sqlpass'] = '';
+
+$cfg['baseDomain'] = 'lansweeper.local';
+$cfg['roomPrefix'] = 'ROOM';
