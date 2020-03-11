@@ -1,0 +1,39 @@
+<html>
+<head>
+<title>Keystroke Test</title>
+</head>
+<body>
+<h3>Text:</h3>
+<p id="text"></p>
+<script type="text/javascript">
+var textP = document.getElementById('text');
+let shiftKey = false;
+	
+document.addEventListener('keyup', function (event) {
+    if (event.defaultPrevented) {
+        return;
+    }
+    var key = event.key || event.keyCode;
+
+	if (key === "Enter") {
+	
+    textP.innerHTML = (textP.innerHTML + "<br \>\n")
+	
+	} else if (key.toUpperCase() === "SHIFT" || key === "Shift" || key === 16) {
+	
+	shiftKey = true
+
+	} else if (shiftKey === true) {
+
+    textP.innerHTML = (textP.innerHTML + key.toUpperCase())
+    shiftKey = false
+    
+    } else {
+
+    textP.innerHTML = (textP.innerHTML + key)
+    
+    }
+    
+});</script>
+</body>
+</html>
