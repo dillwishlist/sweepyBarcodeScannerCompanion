@@ -311,7 +311,13 @@ elseif ($barcodeValue) {
 				PrintAssetInventoryInfo(GetAssetInventoryInfo($assetID,$cfg['baseDomain']));
 			}
 		}
-	} else { $html = $html . "<p>Barcode Invalid!</p>\n"; }
+	}
+	else
+		{
+			$html = $html . "<p>Barcode Invalid!</p>\n";
+			$html = $html . "<script type=\"text/javascript\">startFadeDec(255, 50, 50, 255, 255, 255, 20);</script>\n";
+
+		}
 } else { $html = $html . "<h2>Please enter/scan a valid Asset Tag Barcode</h2>\n"; }
 
 function PrintAssetExplosion($explodedBarcode)
