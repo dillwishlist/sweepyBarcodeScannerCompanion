@@ -65,10 +65,6 @@
     <meta charset="utf-8" />
     <title>Sweepy Barcode Scanner Companion</title>
     <script type="text/javascript">
-      window.onload = function() {
-        document.getElementById("barcodeBox").focus();
-      }
-      
       function stBrowserDidScanBarcode(type, data, stid) {
         document.getElementById("barcodeBox").value=data;
         document.forms[0].submit();
@@ -84,10 +80,8 @@ echo("
 <h3>Sweepy Barcode Scanner Companion</h3>
 <p></p>
 <form action=\"#\" method=\"post\" name=\"barcodeForm\">
-<p><label>Barcode: </label><input type=\"text\" id=\"barcodeBox\" name=\"barcodeValue\" value=\"\"/ autofocus=\"autofocus\" onblur=\"setTimeout(function(){this.focus()}, 10);\" /></p>
-<p><button type=\"submit\">Submit</button></p>
+<p><label>Barcode: </label><input type=\"text\" id=\"barcodeBox\" name=\"barcodeValue\" value=\"\"/ /><button type=\"submit\">Submit</button></p>
 </form>
-<h4>Note: This will add the Last Physical Inventory time and a comment to that effect to any asset with a valid barcode scanned.</h4>
 ");
 ?>
 <?php
@@ -101,12 +95,13 @@ $containerAssetRelationshipType = "5";
 if ($inventoryRoom)
 	{
 	    echo("<h3>Inventory Mode</h3>");
+		echo("<h3>" . $inventoryLocation . " " . $inventoryBuilding . " " . $inventoryDepartment . " " . $inventoryBranchoffice . " <a href=\"#\" onclick=\"document.getElementById('barcodeBox').value='" . $cfg['roomPrefix'] . "';document.forms[0].submit();\">Exit Room</a></h3>");
 	}
 
 if ($explodedBarcode[0] == $cfg['roomPrefix'] && $inventoryRoom == false)
 	{
 		$inventoryRoom = true;
-		echo("<h1>Inventory Set</h1>");
+//		echo("<h1>Inventory Set</h1>");
 		$inventoryLocation = $explodedBarcode[1];
 		$inventoryBuilding = $explodedBarcode[2];
 		$inventoryDepartment = $explodedBarcode[3];
@@ -462,7 +457,7 @@ function InsertAssetCommentAuditTrail($assetID,$baseDomain,$inventoryInfoArray,$
     		{
 		        $comment = "Audit: Was L: " . $inventoryInfoArray[1] . " B: " . $inventoryInfoArray[2] . " D: " . $inventoryInfoArray[3] . " bO: " . $inventoryInfoArray[4];
         	}
-        $sqlComment = htmlspecialchars($comment,ENT_Quotes);
+        $sqlComment = htmlspecialchars($comment);
         try
         {
             $conn = OpenConnection($baseDomain);
