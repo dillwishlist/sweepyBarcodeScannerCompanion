@@ -58,7 +58,7 @@
 		$assetRelationParentID = '';
 	}
 
-?>	
+$html = <<<HTML
 	<!DOCTYPE html>
 <html>
   <head>
@@ -69,22 +69,173 @@
         document.getElementById("barcodeBox").value=data;
         document.forms[0].submit();
 	  }
+	  
+	  <!--
+////////////////////////////////////////
+// FP 10/2001
+// background fade function
+////////////////////////////////////////
+var numSteps=0;
+var startingRed=0;
+var startingGreen=0;
+var startingBlue=0;
+var endingRed=0;
+var endingGreen=0;
+var endingBlue=0;
+var deltaRed=0;
+var deltaGreen=0;
+var deltaBlue=0;
+var currentRed=0;
+var currentGreen=0;
+var currentBlue=0;
+var currentStep=0;
+var timerID=0;
+
+////////////////////////////////////////
+// fade timer
+////////////////////////////////////////
+function startFadeDec(startR, startG, startB, 
+   endR, endG, endB, nSteps)
+{
+//alert("sf");
+	// need to parse, otherwise it thinks it's not a number
+  	currentRed=startingRed=parseInt(startR, 10);
+  	currentGreen=startingGreen=parseInt(startG, 10);
+  	currentBlue=startingBlue=parseInt(startB, 10);
+  	endingRed=parseInt(endR, 10);
+  	endingGreen=parseInt(endG, 10);
+  	endingBlue=parseInt(endB, 10);
+  	numSteps=parseInt(nSteps, 10);
+  	deltaRed=(endingRed-startingRed)/numSteps;
+  	deltaGreen=(endingGreen-startingGreen)/numSteps;
+	deltaBlue=(endingBlue-startingBlue)/numSteps;
+	currentStep=0;
+	
+/*	alert("cr="+currentRed+" cg="+currentGreen+" cb="+currentBlue);
+	alert("dr="+deltaRed+" dg="+deltaGreen+" db="+deltaBlue);
+	alert("er="+endingRed+" eg="+endingGreen+" eb="+endingBlue);
+*/	
+  	fade();
+}
+  
+////////////////////////////////////////
+// fade timer
+////////////////////////////////////////
+function fade()
+{
+//	alert(color);
+//  	alert(document.bgColor);
+  	
+  	currentStep++;
+  	// if not done yet, change the backround
+  	if (currentStep<=numSteps)
+  	{
+		// convert to hex	
+		var hexRed=decToHex(currentRed);
+		var hexGreen=decToHex(currentGreen);
+		var hexBlue=decToHex(currentBlue);
+	
+		var color="#"+hexRed+""+hexGreen+""+hexBlue+"";
+//	alert(color);
+		
+	  	document.bgColor=color;
+//  	alert(document.bgColor);
+
+		// increment color
+		currentRed+=deltaRed;
+		currentGreen+=deltaGreen;
+		currentBlue+=deltaBlue;
+//	alert("cr="+currentRed+" cg="+currentGreen+" cb="+currentBlue);
+		
+	  	timerID=setTimeout("fade()", 200); // sets timer so that this function will
+                  		   		      // be called every 10 miliseconds
+   }
+}
+
+////////////////////////////////////////
+// convert decimal to hexadecimal number
+////////////////////////////////////////
+function decToHex(decNum)
+{
+//alert ("1");
+	decNum=Math.floor(decNum);
+	var decString=""+decNum;
+	// make sure the number is valid
+	for (var i=0; i<decString.length; i++)
+	{
+//alert ("2");
+	
+		if (decString.charAt(i)>='0' && decString.charAt(i)<='9')
+		{
+		}
+		else
+		{
+			alert(decString+" is not a valid decimal number because it contains "+decString.charAt(i));
+ 			return decNum;
+		}
+	}
+	var result=decNum;
+	var remainder="";
+	// use string because math operation won't work with hex alphabet
+	var hexNum="";
+
+	var hexAlphabet=new Array("0","1","2","3","4","5","6","7","8","9","A","B","C","D","E","F");
+//	alert("converting "+decNum+" to "+hexNum);
+	while (result>0)
+	{
+		result=Math.floor(decNum/16);
+		remainder=decNum%16;
+		decNum=result;
+
+/*		if (remainder>=10)
+		{
+			// use double quotes because Netscape 3 will give error if using single quote
+			if (remainder==10)
+				remainder="A";
+			if (remainder==11)
+				remainder="B";
+			if (remainder==12)
+				remainder="C";
+			if (remainder==13)
+				remainder="D";
+			if (remainder==14)
+				remainder="E";
+			if (remainder==15)
+				remainder="F";
+		}*/
+		// just append the next remainder to the beginning of the string
+		hexNum=""+hexAlphabet[remainder]+""+hexNum;
+	};
+//	alert("converting "+decNum+" to "+hexNum);
+	// make sure to have at least 2 digits
+	if (hexNum.length==1)
+		hexNum="0"+hexNum;
+	else if (hexNum.length==0)
+		hexNum="00";
+	return hexNum;
+}   
+
+function fadeRandom()
+{
+	startFadeDec(sR, sG, sB, eR, eG, eB, 30);
+}
+// -->
+
+	  
     </script>
   </head>
   <body>
-<?php
+HTML;
 
     $barcodeValue = (isset($_REQUEST["barcodeValue"])?$_REQUEST["barcodeValue"]:"");
 
-echo("
+$html = $html . "
 <h3>Sweepy Barcode Scanner Companion</h3>
 <p></p>
 <form action=\"#\" method=\"post\" name=\"barcodeForm\">
 <p><label>Barcode: </label><input type=\"text\" id=\"barcodeBox\" name=\"barcodeValue\" value=\"\"/ /><button type=\"submit\">Submit</button></p>
 </form>
-");
-?>
-<?php
+";
 
 $baseLSURL = "https://" . $cfg['baseDomain'] . "/asset.aspx?AssetID=";
 $containerAssetRelationshipType = "5";
@@ -94,14 +245,14 @@ $containerAssetRelationshipType = "5";
 
 if ($inventoryRoom)
 	{
-	    echo("<h3>Inventory Mode</h3>");
-		echo("<h3>" . $inventoryLocation . " " . $inventoryBuilding . " " . $inventoryDepartment . " " . $inventoryBranchoffice . " <a href=\"#\" onclick=\"document.getElementById('barcodeBox').value='" . $cfg['roomPrefix'] . "';document.forms[0].submit();\">Exit Room</a></h3>");
+	    $html = $html . "<h3>Inventory Mode</h3>\n";
+		$html = $html . "<h3>" . $inventoryLocation . " " . $inventoryBuilding . " " . $inventoryDepartment . " " . $inventoryBranchoffice . " <a href=\"#\" onclick=\"document.getElementById('barcodeBox').value='" . $cfg['roomPrefix'] . "';document.forms[0].submit();\">Exit Room</a></h3>\n";
 	}
 
 if ($explodedBarcode[0] == $cfg['roomPrefix'] && $inventoryRoom == false)
 	{
 		$inventoryRoom = true;
-//		echo("<h1>Inventory Set</h1>");
+//		$html = $html . "<h1>Inventory Set</h1>\n";
 		$inventoryLocation = $explodedBarcode[1];
 		$inventoryBuilding = $explodedBarcode[2];
 		$inventoryDepartment = $explodedBarcode[3];
@@ -110,7 +261,7 @@ if ($explodedBarcode[0] == $cfg['roomPrefix'] && $inventoryRoom == false)
 elseif ($explodedBarcode[0] == $cfg['roomPrefix'] && $inventoryRoom == true)
 	{
 		$inventoryRoom = false;
-		echo("<h1>Inventory Unset</h1>");
+		$html = $html . "<h1>Inventory Unset</h1>\n";
 		$inventoryLocation = false;
 		$inventoryBuilding = false;
 		$inventoryDepartment = false;
@@ -118,19 +269,20 @@ elseif ($explodedBarcode[0] == $cfg['roomPrefix'] && $inventoryRoom == true)
 	}
 elseif ($barcodeValue) {
 	$assetID = GetAssetID($barcodeValue,$cfg['baseDomain']);
+	$html = $html . "<script type=\"text/javascript\">startFadeDec(50, 255, 50, 255, 255, 255, 20);</script>\n";
 	if ($assetID) {
 		$assetType = GetAssetType($assetID,$cfg['baseDomain']);
 		if ($assetType == 901 || $assetType == 908)
 		{
 			if ($assetID == $assetRelationParentID)
 			{
-				echo("<h1>Container Unset</h1>");
+				$html = $html . "<h1>Container Unset</h1>\n";
 				EchoAssetLinks($baseLSURL,$assetID);
 				$addContainerAssetRelation = false;
 				$assetRelationParentID = '';
 
 			} else {
-				echo("<h1>Container Set</h1>");
+				$html = $html . "<h1>Container Set</h1>\n";
 				SetAssetCustomBarcodeScanTime($assetID,$cfg['baseDomain']);
 				InsertAssetCommentBarcodeScanTime($assetID,$cfg['baseDomain']);
 				EchoAssetLinks($baseLSURL,$assetID);
@@ -140,7 +292,7 @@ elseif ($barcodeValue) {
 		} else {
 			if ($addContainerAssetRelation)
 			{
-				echo("<h1>Adding Asset Relationship</h1>");
+				$html = $html . "<h1>Adding Asset Relationship</h1>\n";
 				SetAssetCustomBarcodeScanTime($assetID,$cfg['baseDomain']);
 				InsertAssetCommentBarcodeScanTime($assetID,$cfg['baseDomain']);
 				EchoAssetLinks($baseLSURL,$assetID);
@@ -159,29 +311,31 @@ elseif ($barcodeValue) {
 				PrintAssetInventoryInfo(GetAssetInventoryInfo($assetID,$cfg['baseDomain']));
 			}
 		}
-	} else { echo("<p>Barcode Invalid!</p>"); }
-} else { echo("<h2>Please enter/scan a valid Asset Tag Barcode!</h2>"); }
+	} else { $html = $html . "<p>Barcode Invalid!</p>\n"; }
+} else { $html = $html . "<h2>Please enter/scan a valid Asset Tag Barcode</h2>\n"; }
 
 function PrintAssetExplosion($explodedBarcode)
 	{
-		    echo("Start Explosion\n");
-		    echo($barcodeValue);
-		    echo("\n");
-		    echo($explodedBarcode . "\n");
-		    echo("\nEnd Explosion\n");
+		global $html;
+		    $html = $html . "Start Explosion\n";
+		    $html = $html . $barcodeValue;
+		    $html = $html . "\n";
+		    $html = $html . $explodedBarcode . "\n";
+		    $html = $html . "\nEnd Explosion\n";
 		    
-		    echo("<p>Location: " . $explodedBarcode[1] . "\n</p>");
-		    echo("<p>Building: " . $explodedBarcode[2] . "\n</p>");
-		    echo("<p>Department: " . $explodedBarcode[3] . "\n</p>");
-		    echo("<p>Branchoffice: " . $explodedBarcode[4] . "\n</p>");
+		    $html = $html . "<p>Location: " . $explodedBarcode[1] . "\n</p>";
+		    $html = $html . "<p>Building: " . $explodedBarcode[2] . "\n</p>";
+		    $html = $html . "<p>Department: " . $explodedBarcode[3] . "\n</p>";
+		    $html = $html . "<p>Branchoffice: " . $explodedBarcode[4] . "\n</p>";
 	}
 
 function AddAssetRelationToParent($assetID,$assetRelationParentID,$baseDomain,$containerAssetRelationshipType)
 	{
+		global $html;
 		if (!CheckAssetRelationToParent($assetID,$assetRelationParentID,$baseDomain,$containerAssetRelationshipType))
 		{
-		echo("<h1>" . CheckAssetRelationToParent($assetID,$assetRelationParentID,$baseDomain,$containerAssetRelationshipType) . "</h1>");
-		echo("<!-- Relation Does Not Exist -->");
+		$html = $html . "<h1>" . CheckAssetRelationToParent($assetID,$assetRelationParentID,$baseDomain,$containerAssetRelationshipType) . "</h1>";
+		$html = $html . "<!-- Relation Does Not Exist -->";
         try
         {
             $conn = OpenConnection($baseDomain);
@@ -195,13 +349,14 @@ function AddAssetRelationToParent($assetID,$assetRelationParentID,$baseDomain,$c
         }
         catch(Exception $e)
         {
-            echo("Error!");
+            $html = $html . "Error!";
         }
-        } else { echo("<!-- Relation Exists -->"); }
+        } else { $html = $html . "<!-- Relation Exists -->"; }
 	}
 
 function CheckAssetRelationToParent($assetID,$assetRelationParentID,$baseDomain,$containerAssetRelationshipType)
 	{
+		global $html;
         try
         {
             $conn = OpenConnection($baseDomain);
@@ -222,36 +377,40 @@ function CheckAssetRelationToParent($assetID,$assetRelationParentID,$baseDomain,
         }
         catch(Exception $e)
         {
-            echo("Error!");
+            $html = $html . "Error!";
         }
 	}
 
 
 function EchoAssetLinks($baseLSURL,$assetID)
 	{
-		echo("<p><a href=\"" . $baseLSURL . $assetID . "\" target=\"_blank\">Open in new page</a></p>\n");
-//		echo("<div height=\"100%\"><iframe src=\"" . $baseLSURL . $assetID . "\" width=\"100%\" height=\"410px\" /></div>\n");
+		global $html;
+		$html = $html . "<p><a href=\"" . $baseLSURL . $assetID . "\" target=\"_blank\">Open in new page</a></p>\n";
+//		$html = $html . "<div height=\"100%\"><iframe src=\"" . $baseLSURL . $assetID . "\" width=\"100%\" height=\"410px\" /></div>\n";
 	}
 
 function PrintAssetInfo($assetName)
 	{
-		if(debug){echo("<h3>Asset Name:</h3>\n");}
-		echo("<h2>" . $assetName . "</h2>\n");
+		global $html;
+		if(debug){$html = $html . "<h3>Asset Name:</h3>\n";}
+		$html = $html . "<h2>" . $assetName . "</h2>\n";
 	}
 
 function PrintAssetInventoryInfo($assetInfoArray)
 	{
+		global $html;
 		if(debug){print_r($assetInfoArray);}
-		echo("<h3>Asset: " . $assetInfoArray[0] . "</h3>\n");
-		echo("<p>Location: " . $assetInfoArray[1] . "</p>\n");
-		echo("<p>Building: " . $assetInfoArray[2] . "</p>\n");
-		echo("<p>Department: " . $assetInfoArray[3] . "</p>\n");
-		echo("<p>Branch Office:" . $assetInfoArray[4] . "</p>\n");
+		$html = $html . "<h3>Asset: " . $assetInfoArray[0] . "</h3>\n";
+		$html = $html . "<p>Location: " . $assetInfoArray[1] . "</p>\n";
+		$html = $html . "<p>Building: " . $assetInfoArray[2] . "</p>\n";
+		$html = $html . "<p>Department: " . $assetInfoArray[3] . "</p>\n";
+		$html = $html . "<p>Branch Office:" . $assetInfoArray[4] . "</p>\n";
 	}
 
 
 function OpenConnection($baseDomain)
     {
+		global $html;
         global $cfg;
         try
         {
@@ -267,21 +426,23 @@ function OpenConnection($baseDomain)
         }
         catch(Exception $e)
         {
-            echo("Error!");
+            $html = $html . "Error!";
         }
     }
 
 function Alert($message)
 {
+		global $html;
 	if (debug)
 	{
-		echo("<script type=\"text/javascript\">alert(\"" . $message . "\");</script>");
+		$html = $html . "<script type=\"text/javascript\">alert(\"" . $message . "\");</script>";
 	}
 }
 
 
 function GetAssetID($barcodeValue,$baseDomain)
     {
+		global $html;
         try
         {
             $conn = OpenConnection($baseDomain);
@@ -302,12 +463,13 @@ function GetAssetID($barcodeValue,$baseDomain)
         }
         catch(Exception $e)
         {
-            echo("Error!");
+            $html = $html . "Error!";
         }
     }
 
 function GetAssetInfo($assetId,$baseDomain)
     {
+		global $html;
         try
         {
             $conn = OpenConnection($baseDomain);
@@ -327,12 +489,13 @@ function GetAssetInfo($assetId,$baseDomain)
         }
         catch(Exception $e)
         {
-            echo("Error!");
+            $html = $html . "Error!";
         }
     }
 
 function GetAssetInventoryInfo($assetId,$baseDomain)
     {
+		global $html;
         try
         {
             $conn = OpenConnection($baseDomain);
@@ -352,17 +515,18 @@ function GetAssetInventoryInfo($assetId,$baseDomain)
         }
         catch(Exception $e)
         {
-            echo("Error!");
+            $html = $html . "Error!";
         }
     }
 
 function UpdateAssetInventory($assetID,$assetLocation,$assetBuilding,$assetDepartment,$assetBranchoffice,$baseDomain)
     {
+		global $html;
         try
         {
             $conn = OpenConnection($baseDomain);
             $tsql = "UPDATE dbo.tblAssetCustom SET dbo.tblAssetCustom.Location='" . $assetLocation . "',dbo.tblAssetCustom.Building='" . $assetBuilding . "',dbo.tblAssetCustom.Department='" . $assetDepartment . "',dbo.tblAssetCustom.Branchoffice='" . $assetBranchoffice . "' where AssetID=" . $assetID;
-            if(debug){echo("SQL: " . $tsql);}
+            if(debug){$html = $html . "SQL: " . $tsql;}
             $getAsset = sqlsrv_query($conn, $tsql);
             if ($getAsset == FALSE)
                 die(sqlsrv_errors());
@@ -373,12 +537,13 @@ function UpdateAssetInventory($assetID,$assetLocation,$assetBuilding,$assetDepar
         }
         catch(Exception $e)
         {
-            echo("Error!");
+            $html = $html . "Error!";
         }
     }
 
 function GetAssetType($assetID,$baseDomain)
     {
+		global $html;
         try
         {
             $conn = OpenConnection($baseDomain);
@@ -396,12 +561,13 @@ function GetAssetType($assetID,$baseDomain)
         }
         catch(Exception $e)
         {
-            echo("Error!");
+            $html = $html . "Error!";
         }
     }
 
 function SetAssetCustomBarcodeScanTime($assetID,$baseDomain)
     {
+		global $html;
         try
         {
             $conn = OpenConnection($baseDomain);
@@ -414,12 +580,13 @@ function SetAssetCustomBarcodeScanTime($assetID,$baseDomain)
         }
         catch(Exception $e)
         {
-            echo("Error!");
+            $html = $html . "Error!";
         }
     }
 
 function InsertAssetCommentBarcodeScanTime($assetID,$baseDomain,$comment="Barcode Scanned")
     {
+		global $html;
         try
         {
             $conn = OpenConnection($baseDomain);
@@ -432,23 +599,25 @@ function InsertAssetCommentBarcodeScanTime($assetID,$baseDomain,$comment="Barcod
         }
         catch(Exception $e)
         {
-            echo("Error!");
+            $html = $html . "Error!";
         }
     }
 
 /*function PrintAssetInventoryInfo($assetInfoArray)
 	{
+		global $html;
 		if(debug){print_r($assetInfoArray);}
-		echo("<h3>Asset: " . $assetInfoArray[0] . "</h3>\n");
-		echo("<p>Location: " . $assetInfoArray[1] . "</p>\n");
-		echo("<p>Building: " . $assetInfoArray[2] . "</p>\n");
-		echo("<p>Department: " . $assetInfoArray[3] . "</p>\n");
-		echo("<p>Branch Office:" . $assetInfoArray[4] . "</p>\n");
+		$html = $html . "<h3>Asset: " . $assetInfoArray[0] . "</h3>\n";
+		$html = $html . "<p>Location: " . $assetInfoArray[1] . "</p>\n";
+		$html = $html . "<p>Building: " . $assetInfoArray[2] . "</p>\n";
+		$html = $html . "<p>Department: " . $assetInfoArray[3] . "</p>\n";
+		$html = $html . "<p>Branch Office:" . $assetInfoArray[4] . "</p>\n";
 	}*/
 
 
 function InsertAssetCommentAuditTrail($assetID,$baseDomain,$inventoryInfoArray,$isNew)
     {
+		global $html;
     	if ($isNew)
     		{
 		        $comment = "Audit: New L: " . $inventoryInfoArray[1] . " B: " . $inventoryInfoArray[2] . " D: " . $inventoryInfoArray[3] . " bO: " . $inventoryInfoArray[4];
@@ -470,9 +639,10 @@ function InsertAssetCommentAuditTrail($assetID,$baseDomain,$inventoryInfoArray,$
         }
         catch(Exception $e)
         {
-            echo("Error!");
+            $html = $html . "Error!";
         }
     }
+$html = $html . "<a href=\"stBrowser://startBarcodeScanner\">Start Scanner</a>\n</body>\n</html>";
 
 setcookie("sweepyScannerMethod",$sweepyScannerMethod);
 setcookie("addContainerAssetRelation",$addContainerAssetRelation);
@@ -483,7 +653,6 @@ setcookie("inventoryDepartment",$inventoryDepartment);
 setcookie("inventoryBranchoffice",$inventoryBranchoffice);
 setcookie("assetRelationParentID",$assetRelationParentID);
 
+echo($html);
+
 ?>
-<a href="stBrowser://startBarcodeScanner">Start Scanner</a>
-  </body>
-</html>
