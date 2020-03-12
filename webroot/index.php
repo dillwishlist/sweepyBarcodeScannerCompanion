@@ -153,6 +153,9 @@ elseif ($barcodeValue) {
 			} else {
 				if ($inventoryRoom)
 					{
+						$oldInventoryInfo = GetAssetInventoryInfo($assetID,$cfg['baseDomain']);
+				        PrintAssetInventoryInfo($oldInventoryInfo);
+                        InsertAssetCommentAuditTrail($assetID,$cfg['baseDomain'],$oldInventoryInfo,false);
 						UpdateAssetInventory($assetID,$inventoryLocation,$inventoryBuilding,$inventoryDepartment,$inventoryBranchoffice,$cfg['baseDomain']);
 					}
 				SetAssetCustomBarcodeScanTime($assetID,$cfg['baseDomain']);
@@ -240,15 +243,6 @@ function PrintAssetInfo($assetName)
 		if(debug){echo("<h3>Asset Name:</h3>\n");}
 		echo("<h2>" . $assetName . "</h2>\n");
 	}
-
-/*function PrintAssetInventoryInfo($assetName,$assetLocation,$assetBuilding,$assetDepartment,$assetBranchOffice)
-	{
-		echo("<p>" . $assetName . "</p>\n");
-		echo("<p>" . $assetLocation . "</p>\n");
-		echo("<p>" . $assetBuilding . "</p>\n");
-		echo("<p>" . $assetDepartment . "</p>\n");
-		echo("<p>" . $assetBranchOffice . "</p>\n");
-	}*/
 
 function PrintAssetInventoryInfo($assetInfoArray)
 	{
@@ -379,6 +373,8 @@ function UpdateAssetInventory($assetID,$assetLocation,$assetBuilding,$assetDepar
                 die(sqlsrv_errors());
             sqlsrv_free_stmt($getAsset);
             sqlsrv_close($conn);
+            $inventoryInfoArray = array(0=>$assetID,1=>$assetLocation,2=>$assetBuilding,3=>$assetDepartment,4=>$assetBranchoffice);
+            InsertAssetCommentAuditTrail($assetID,$baseDomain,$inventoryInfoArray,true);
         }
         catch(Exception $e)
         {
@@ -433,6 +429,44 @@ function InsertAssetCommentBarcodeScanTime($assetID,$baseDomain,$comment="Barcod
         {
             $conn = OpenConnection($baseDomain);
             $tsql = "INSERT INTO dbo.tblAssetComments (AssetID,Comment,AddedBy) values (" . $assetID . ",'" . $comment . "','SBSC')";
+            $getAsset = sqlsrv_query($conn, $tsql);
+            if ($getAsset == FALSE)
+                die(sqlsrv_errors());
+            sqlsrv_free_stmt($getAsset);
+            sqlsrv_close($conn);
+        }
+        catch(Exception $e)
+        {
+            echo("Error!");
+        }
+    }
+
+/*function PrintAssetInventoryInfo($assetInfoArray)
+	{
+		if(debug){print_r($assetInfoArray);}
+		echo("<h3>Asset: " . $assetInfoArray[0] . "</h3>\n");
+		echo("<p>Location: " . $assetInfoArray[1] . "</p>\n");
+		echo("<p>Building: " . $assetInfoArray[2] . "</p>\n");
+		echo("<p>Department: " . $assetInfoArray[3] . "</p>\n");
+		echo("<p>Branch Office:" . $assetInfoArray[4] . "</p>\n");
+	}*/
+
+
+function InsertAssetCommentAuditTrail($assetID,$baseDomain,$inventoryInfoArray,$isNew)
+    {
+    	if ($isNew)
+    		{
+		        $comment = "Audit: New L: " . $inventoryInfoArray[1] . " B: " . $inventoryInfoArray[2] . " D: " . $inventoryInfoArray[3] . " bO: " . $inventoryInfoArray[4];
+        	}
+    	else
+    		{
+		        $comment = "Audit: Was L: " . $inventoryInfoArray[1] . " B: " . $inventoryInfoArray[2] . " D: " . $inventoryInfoArray[3] . " bO: " . $inventoryInfoArray[4];
+        	}
+        $sqlComment = htmlspecialchars($comment,ENT_Quotes);
+        try
+        {
+            $conn = OpenConnection($baseDomain);
+            $tsql = "INSERT INTO dbo.tblAssetComments (AssetID,Comment,AddedBy) values (" . $assetID . ",'" . $sqlComment . "','SBSC')";
             $getAsset = sqlsrv_query($conn, $tsql);
             if ($getAsset == FALSE)
                 die(sqlsrv_errors());
