@@ -1,5 +1,7 @@
-# sweepyBarcodeScannerCompanion
+# Sweepy
 Sweepy Barcode Scanner Companion for Lansweeper
+
+Also known as SBSC, or Sweepy
 
 This project aims to make the tasks of inventory and asset info for a tech in the field possible with a mobile device.  Currently Lansweeper (https://www.lansweeper.com) does not have this functionality available.
 
