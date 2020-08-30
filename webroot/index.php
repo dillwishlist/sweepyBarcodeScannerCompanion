@@ -538,7 +538,7 @@ function GetAssetInventoryInfo($assetId,$baseDomain)
 function GetAssetUserRelations($assetId,$baseDomain)
     {
         global $html;
-        array $relationsArray;
+        $relationsArray = array();
         try
         {
             $conn = OpenConnection($baseDomain);
