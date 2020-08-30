@@ -555,7 +555,7 @@ function GetAssetUserRelations($assetId,$baseDomain)
                 }
             sqlsrv_free_stmt($getAsset);
             sqlsrv_close($conn);
-            return $relationsArray
+            return $relationsArray;
         }
         catch(Exception $e)
         {
