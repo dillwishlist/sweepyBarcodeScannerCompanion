@@ -419,7 +419,7 @@ function PrintAssetUserRelations($relationsArray)
         global $html;
         if(debug){print_r($relationsArray);}
         foreach($relationsArray as $field) {
-            $html = $html . "<h1>Asset: " . $field . "</h1>\n";
+            $html = $html . "<h3>" . $field . "</h3>\n";
         }
     }
 
@@ -550,7 +550,7 @@ function GetAssetUserRelations($assetId,$baseDomain)
             while ($row = sqlsrv_fetch_array($getAsset))
                 {
                     Alert($row);
-                    $relationsArray[] = ('<a href="' . $baseDomain . 'user.aspx?username=' . $row['username'] . '&userdomain=orcsd"</a> Since ' . date_format($row['StartDate'], 'Y-m-d') . ' through ' . date_format($row['EndDate'], 'Y-m-d') . ' Comments: ' . $row['Comments'] . '');
+                    $relationsArray[] = ('<a href="' . $baseDomain . 'user.aspx?username=' . $row['username'] . '&userdomain=orcsd">' . $row['username'] . '</a> Since ' . date_format($row['StartDate'], 'Y-m-d') . ' through ' . date_format($row['EndDate'], 'Y-m-d') . ' Comments: ' . $row['Comments'] . '');
 //                    $assetName,$assetLocation,$assetBuilding,$assetDepartment,$assetBranchOffice
                 }
             sqlsrv_free_stmt($getAsset);
