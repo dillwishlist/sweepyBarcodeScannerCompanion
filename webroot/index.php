@@ -550,7 +550,7 @@ function GetAssetUserRelations($assetId,$baseDomain)
             while ($row = sqlsrv_fetch_array($getAsset))
                 {
                     Alert($row);
-                    $relationsArray[] = ('<a href="' . $baseDomain . 'user.aspx?username=' . $row['username'] . '&userdomain=orcsd"</a> Since ' . $row['StartDate'] . ' through ' . $row['EndDate'] . ' Comments: ' . $row['Comments'] . '');
+                    $relationsArray[] = ('<a href="' . $baseDomain . 'user.aspx?username=' . $row['username'] . '&userdomain=orcsd"</a> Since ' . date_format($row['StartDate'], 'Y-m-d') . ' through ' . date_format($row['EndDate'], 'Y-m-d') . ' Comments: ' . $row['Comments'] . '');
 //                    $assetName,$assetLocation,$assetBuilding,$assetDepartment,$assetBranchOffice
                 }
             sqlsrv_free_stmt($getAsset);
