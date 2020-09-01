@@ -313,7 +313,7 @@ function PrintAssetInventoryInfo($baseLSURL,$assetInfoArray)
     {
         global $html;
         if(debug){print_r($assetInfoArray);}
-        $html = $html . "<h3>Asset: " . $assetInfoArray[0] . "</h3>\n";
+        $html = $html . "<a href=\"" . $baseLSURL . $assetID . "\" target=\"_blank\"><h3>Asset: " . $assetInfoArray[0] . "</h3></a>\n";
         $html = $html . "<p>Location: " . $assetInfoArray[1] . "</p>\n";
         $html = $html . "<p>Building: " . $assetInfoArray[2] . "</p>\n";
         $html = $html . "<p>Department: " . $assetInfoArray[3] . "</p>\n";
