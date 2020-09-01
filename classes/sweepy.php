@@ -64,6 +64,7 @@ $html = <<<HTML
   <head>
     <meta charset="utf-8" />
     <title>Sweepy Barcode Scanner Companion</title>
+    <script type="text/javascript" src="/quaggaJS/dist/quagga.min.js"></script>
     <script type="text/javascript">
       function stBrowserDidScanBarcode(type, data, stid) {
         document.getElementById("barcodeBox").value=data;
