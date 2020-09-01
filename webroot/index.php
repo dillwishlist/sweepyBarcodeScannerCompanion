@@ -76,13 +76,13 @@ elseif ($barcodeValue) {
                 if ($inventoryRoom)
                     {
                         $oldInventoryInfo = GetAssetInventoryInfo($assetID,$cfg['baseDomain']);
-                        PrintAssetInventoryInfo($oldInventoryInfo);
+                        PrintAssetInventoryInfo($cfg['baseDomain'],$oldInventoryInfo);
                         InsertAssetCommentAuditTrail($assetID,$cfg['baseDomain'],$oldInventoryInfo,false);
                         UpdateAssetInventory($assetID,$inventoryLocation,$inventoryBuilding,$inventoryDepartment,$inventoryBranchoffice,$cfg['baseDomain']);
                     }
                 SetAssetCustomBarcodeScanTime($assetID,$cfg['baseDomain']);
                 InsertAssetCommentBarcodeScanTime($assetID,$cfg['baseDomain']);
-                PrintAssetInventoryInfo(GetAssetInventoryInfo($assetID,$cfg['baseDomain']));
+                PrintAssetInventoryInfo($cfg['baseDomain'],GetAssetInventoryInfo($assetID,$cfg['baseDomain']));
                 PrintAssetUserRelations(GetAssetUserRelations($assetID,$cfg['baseDomain']));
             }
         }
