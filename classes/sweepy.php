@@ -302,18 +302,18 @@ function EchoAssetLinks($baseLSURL,$assetID)
 //        $html = $html . "<div height=\"100%\"><iframe src=\"" . $baseLSURL . $assetID . "\" width=\"100%\" height=\"410px\" /></div>\n";
     }
 
-function PrintAssetInfo($baseLSURL,$assetName)
+function PrintAssetInfo($assetName)
     {
         global $html;
         if(debug){$html = $html . "<h3>Asset Name:</h3>\n";}
-        $html = $html . "<a href=\"" . $baseLSURL . $assetID . "\" target=\"_blank\"><h2>" . $assetName . "</h2></a>\n";
+        $html = $html . "<h2>" . $assetName . "</h2>\n";
     }
 
-function PrintAssetInventoryInfo($baseLSURL,$assetInfoArray)
+function PrintAssetInventoryInfo($baseLSURL,$assetInfoArray,$assetID)
     {
         global $html;
         if(debug){print_r($assetInfoArray);}
-        $html = $html . "<a href=\"" . $baseLSURL . $assetID . "\" target=\"_blank\"><h3>Asset: " . $assetInfoArray[0] . "</h3></a>\n";
+        $html = $html . "<a href=\"https://" . $baseLSURL . "/asset.aspx?AssetID=" . $assetID . "\" target=\"_blank\"><h3>Asset: " . $assetInfoArray[0] . "</h3></a>\n";
         $html = $html . "<p>Location: " . $assetInfoArray[1] . "</p>\n";
         $html = $html . "<p>Building: " . $assetInfoArray[2] . "</p>\n";
         $html = $html . "<p>Department: " . $assetInfoArray[3] . "</p>\n";
