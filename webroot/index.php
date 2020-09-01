@@ -82,7 +82,6 @@ elseif ($barcodeValue) {
                     }
                 SetAssetCustomBarcodeScanTime($assetID,$cfg['baseDomain']);
                 InsertAssetCommentBarcodeScanTime($assetID,$cfg['baseDomain']);
-                EchoAssetLinks($baseLSURL,$assetID);
                 PrintAssetInventoryInfo(GetAssetInventoryInfo($assetID,$cfg['baseDomain']));
                 PrintAssetUserRelations(GetAssetUserRelations($assetID,$cfg['baseDomain']));
             }

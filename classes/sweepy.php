@@ -302,11 +302,11 @@ function EchoAssetLinks($baseLSURL,$assetID)
 //        $html = $html . "<div height=\"100%\"><iframe src=\"" . $baseLSURL . $assetID . "\" width=\"100%\" height=\"410px\" /></div>\n";
     }
 
-function PrintAssetInfo($assetName)
+function PrintAssetInfo($baseLSURL,$assetName)
     {
         global $html;
         if(debug){$html = $html . "<h3>Asset Name:</h3>\n";}
-        $html = $html . "<h2>" . $assetName . "</h2>\n";
+        $html = $html . "<a href=\"" . $baseLSURL . $assetID . "\" target=\"_blank\"><h2>" . $assetName . "</h2></a>\n";
     }
 
 function PrintAssetInventoryInfo($assetInfoArray)
