@@ -1,0 +1,3 @@
+[submodule "webroot/quaggaJS"]
+	path = webroot/quaggaJS
+	url = https://github.com/serratus/quaggaJS.git
