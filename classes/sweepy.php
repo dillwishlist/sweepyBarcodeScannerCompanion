@@ -613,7 +613,7 @@ function InsertAssetCommentAuditTrail($assetID,$baseDomain,$inventoryInfoArray,$
             $html = $html . "Error!";
         }
     }
-$html = $html . "<a href=\"stBrowser://startBarcodeScanner\">Start Scanner</a>\n<a href="\#\" onclick=\"Quagga.start()\">Start WebScanner</a></body>\n</html>";
+$html = $html . "<a href=\"stBrowser://startBarcodeScanner\">Start Scanner</a>\n<a href=\"#\" onclick=\"Quagga.start()\">Start WebScanner</a></body>\n</html>";
 
 setcookie("sweepyScannerMethod",$sweepyScannerMethod);
 setcookie("addContainerAssetRelation",$addContainerAssetRelation);
