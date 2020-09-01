@@ -318,7 +318,7 @@ function PrintAssetInventoryInfo($baseLSURL,$assetInfoArray,$assetID)
         $html = $html . "<p>Building: " . $assetInfoArray[2] . "</p>\n";
         $html = $html . "<p>Department: " . $assetInfoArray[3] . "</p>\n";
         $html = $html . "<p>Branch Office:" . $assetInfoArray[4] . "</p>\n";
-        $html = $html . "<p>Last Physical Inventory:" . $assetInfoArray[5] . "</p>\n";
+        $html = $html . "<p>Last Physical Inventory: " . $assetInfoArray[5] . "</p>\n";
     }
 
 function PrintAssetUserRelations($relationsArray)
