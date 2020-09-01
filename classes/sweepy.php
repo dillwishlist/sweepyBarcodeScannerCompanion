@@ -309,7 +309,7 @@ function PrintAssetInfo($baseLSURL,$assetName)
         $html = $html . "<a href=\"" . $baseLSURL . $assetID . "\" target=\"_blank\"><h2>" . $assetName . "</h2></a>\n";
     }
 
-function PrintAssetInventoryInfo($assetInfoArray)
+function PrintAssetInventoryInfo($baseLSURL,$assetInfoArray)
     {
         global $html;
         if(debug){print_r($assetInfoArray);}
