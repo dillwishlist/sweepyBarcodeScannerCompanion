@@ -63,7 +63,7 @@ $html = <<<HTML
 <html>
   <head>
     <meta charset="utf-8" />
-    <title>Sweepy Barcode Scanner Companion</title>
+    <title>Sweepy</title>
     <script type="text/javascript">
       function stBrowserDidScanBarcode(type, data, stid) {
         document.getElementById("barcodeBox").value=data;
@@ -223,8 +223,7 @@ function fadeRandom()
 
       
     </script>
-    <meta name="viewport" content="width=device-width; initial-scale=1.0; user-scalable=no" />
-    <link rel="stylesheet" type="text/css" href="/quaggaJS/example/css/styles.css" />
+    <link rel="stylesheet" type="text/css" href="x/quaggaJS/example/css/styles.css" />
   </head>
   <body>
 HTML;
@@ -595,7 +594,6 @@ function InsertAssetCommentAuditTrail($assetID,$baseDomain,$inventoryInfoArray,$
             $html = $html . "Error!";
         }
     }
-$html = $html . "<a href=\"stBrowser://startBarcodeScanner\">Start Scanner</a>\n<a href=\"#\" onclick=\"Quagga.start()\">Start WebScanner</a></body>\n</html>";
 
 setcookie("sweepyScannerMethod",$sweepyScannerMethod);
 setcookie("addContainerAssetRelation",$addContainerAssetRelation);
