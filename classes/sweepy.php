@@ -64,26 +64,6 @@ $html = <<<HTML
   <head>
     <meta charset="utf-8" />
     <title>Sweepy Barcode Scanner Companion</title>
-    <script type="text/javascript" src="/quaggaJS/dist/quagga.min.js"></script>
-    <script type="text/javascript">
-  Quagga.init({
-    inputStream : {
-      name : "Live",
-      type : "LiveStream",
-      target: document.querySelector('#yourElement')    // Or '#yourElement' (optional)
-    },
-    decoder : {
-      readers : ["code_128_reader"]
-    }
-  }, function(err) {
-      if (err) {
-          console.log(err);
-          return
-      }
-      console.log("Initialization finished. Ready to start");
-      Quagga.start();
-  });
-    </script>
     <script type="text/javascript">
       function stBrowserDidScanBarcode(type, data, stid) {
         document.getElementById("barcodeBox").value=data;
@@ -243,6 +223,8 @@ function fadeRandom()
 
       
     </script>
+    <meta name="viewport" content="width=device-width; initial-scale=1.0; user-scalable=no" />
+    <link rel="stylesheet" type="text/css" href="quaggaJS/css/styles.css" />
   </head>
   <body>
 HTML;

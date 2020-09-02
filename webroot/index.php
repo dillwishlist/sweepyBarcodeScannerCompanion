@@ -95,7 +95,13 @@ elseif ($barcodeValue) {
         }
 } else { $html = $html . "<h2>Please enter/scan a valid Asset Tag Barcode</h2>\n"; }
 
-$html = $html . "            <section id=\"container\" class=\"container\">
+$html = $html . "<header>
+          <div class=\"headline\">
+              <h1>QuaggaJS</h1>
+              <h2>An advanced barcode-scanner written in JavaScript</h2>
+          </div>
+      </header>
+<section id=\"container\" class=\"container\">
         <h3>The user's camera</h3>
         <p>If your platform supports the <strong>getUserMedia</strong> API call, you can try the real-time locating and decoding features.
             Simply allow the page to access your web-cam and point it to a barcode. You can switch between <strong>Code128</strong>
