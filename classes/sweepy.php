@@ -64,6 +64,7 @@ $html = <<<HTML
   <head>
     <meta charset="utf-8" />
     <title>Sweepy</title>
+    <link rel="stylesheet" type="text/css" href="/css/style.css" />
     <script type="text/javascript">
       function stBrowserDidScanBarcode(type, data, stid) {
         document.getElementById("barcodeBox").value=data;
@@ -224,7 +225,6 @@ function fadeRandom()
       
     </script>
     <meta name="viewport" content="width=device-width; initial-scale=1.0; user-scalable=no" />
-    <link rel="stylesheet" type="text/css" href="x/quaggaJS/example/css/styles.css" />
   </head>
   <body>
 HTML;
