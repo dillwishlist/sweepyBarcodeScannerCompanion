@@ -223,7 +223,7 @@ function fadeRandom()
 
       
     </script>
-    <link rel="stylesheet" type="text/css" href="x/quaggaJS/example/css/styles.css" />
+    <link rel="stylesheet" type="text/css" href="/quaggaJS/example/css/styles.css" />
   </head>
   <body>
 HTML;
