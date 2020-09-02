@@ -95,7 +95,14 @@ elseif ($barcodeValue) {
         }
 } else { $html = $html . "<h2>Please enter/scan a valid Asset Tag Barcode</h2>\n"; }
 
-$html = $html . "        <div class=\"controls\">
+$html = $html . "            <section id=\"container\" class=\"container\">
+        <h3>The user's camera</h3>
+        <p>If your platform supports the <strong>getUserMedia</strong> API call, you can try the real-time locating and decoding features.
+            Simply allow the page to access your web-cam and point it to a barcode. You can switch between <strong>Code128</strong>
+            and <strong>EAN</strong> to test different scenarios.
+            It works best if your camera has built-in auto-focus.
+            </p>
+<div class=\"controls\">
             <fieldset class=\"input-group\">
                 <button class=\"stop\">Stop</button>
             </fieldset>
