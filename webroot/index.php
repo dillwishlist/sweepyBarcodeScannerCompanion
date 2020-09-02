@@ -177,7 +177,7 @@ $html = $html . "        <div class=\"controls\">
     <script src=\"//webrtc.github.io/adapter/adapter-latest.js\" type=\"text/javascript\"></script>
     <script src=\"../dist/quagga.js\" type=\"text/javascript\"></script>
     <script src=\"live_w_locator.js\" type=\"text/javascript\"></script>
-"
+";
 
 echo($html);
 
