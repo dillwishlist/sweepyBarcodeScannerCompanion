@@ -173,10 +173,10 @@ $html = $html . "        <div class=\"controls\">
       </div>
       <div id=\"interactive\" class=\"viewport\"></div>
     </section>
-    <script src=\"/quaggaJS/examples/vendor/jquery-1.9.0.min.js\" type=\"text/javascript\"></script>
+    <script src=\"/quaggaJS/example/vendor/jquery-1.9.0.min.js\" type=\"text/javascript\"></script>
     <script src=\"//webrtc.github.io/adapter/adapter-latest.js\" type=\"text/javascript\"></script>
     <script src=\"/quaggaJS/dist/quagga.js\" type=\"text/javascript\"></script>
-    <script src=\"/quaggaJS/examples/live_w_locator.js\" type=\"text/javascript\"></script>
+    <script src=\"/quaggaJS/example/live_w_locator.js\" type=\"text/javascript\"></script>
 ";
 
 echo($html);
