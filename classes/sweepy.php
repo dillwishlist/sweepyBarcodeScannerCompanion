@@ -462,7 +462,7 @@ function GetAssetInventoryInfo($assetId,$baseDomain)
             while ($row = sqlsrv_fetch_array($getAsset))
                 {
 //                    Alert($row);
-                    return array(htmlspecialchars($row['AssetName']),htmlspecialchars($row['Location']),htmlspecialchars($row['Building']),htmlspecialchars($row['Department']),htmlspecialchars($row['Branchoffice']),htmlspecialchars($row['Custom01']),htmlspecialchars($row['Custom15']));
+                    return array(htmlspecialchars($row['AssetName']),htmlspecialchars($row['Location']),htmlspecialchars($row['Building']),htmlspecialchars($row['Department']),htmlspecialchars($row['Branchoffice']),htmlspecialchars($row['Custom1']),htmlspecialchars($row['Custom15']));
 //                    $assetName,$assetLocation,$assetBuilding,$assetDepartment,$assetBranchOffice
                 }
             sqlsrv_free_stmt($getAsset);
