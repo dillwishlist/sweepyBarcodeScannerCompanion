@@ -22,8 +22,8 @@ $containerAssetRelationshipType = "5";
             $explodedBarcode = explode("_",$barcodeValue);
 //            PrintAssetExplosion($explodedBarcode);
 
-if ($barcodeValue) {
-    $assetID = GetAssetIDBySerial($barcodeValue,$cfg['baseDomain']);
+if ($serialValue) {
+    $assetID = GetAssetIDBySerial($serialValue,$cfg['baseDomain']);
     $html = $html . "<script type=\"text/javascript\">startFadeDec(50, 255, 50, 255, 255, 255, 20);</script>\n";
     if ($assetID) {
         $assetType = GetAssetType($assetID,$cfg['baseDomain']);
