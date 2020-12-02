@@ -1,4 +1,6 @@
 <?php
+	require_once '../../classes/sweepy.php';
+
 	if (isset($_POST["serialNumber"]))
 	{
 	    $serialValue = $_POST["serialNumber"];
@@ -14,119 +16,74 @@
 	}
 	
 
-function Alert($message)
-{
-	if (false) //True for debug, false for production.
-	{
-		echo($message . "\r\n");
-	}
-}
-
-$baseDomain = "lansweeper.local";
-$baseLSURL = "https://" . $baseDomain . "/asset.aspx?AssetID=";
+$baseLSURL = "https://" . $cfg['baseDomain'] . "/asset.aspx?AssetID=";
 $containerAssetRelationshipType = "5";
 
-if ($serialValue) {
-	Alert($serialValue);
-	$assetID = GetAssetIDBySerial($serialValue,$baseDomain);
-	Alert($assetID);
-	echo GetName($assetID,$baseDomain) . "\r\n";
-}
+            $explodedBarcode = explode("_",$barcodeValue);
+//            PrintAssetExplosion($explodedBarcode);
 
-function OpenConnection($baseDomain)
-    {
-        try
+if ($barcodeValue) {
+    $assetID = GetAssetIDBySerial($barcodeValue,$cfg['baseDomain']);
+    $html = $html . "<script type=\"text/javascript\">startFadeDec(50, 255, 50, 255, 255, 255, 20);</script>\n";
+    if ($assetID) {
+        $assetType = GetAssetType($assetID,$cfg['baseDomain']);
+        if ($assetType == 901 || $assetType == 908)
         {
-            $serverName = "tcp:" . $baseDomain . ",1433";
-            $connectionOptions = array("Database"=>"lansweeperdb",
-                "Uid"=>"sqluser", "PWD"=>"sqlpassword");
-            $conn = sqlsrv_connect($serverName, $connectionOptions);
-            if($conn == false)
-                die(sqlsrv_errors());
-            else
-            	return $conn;
-        }
-        catch(Exception $e)
-        {
-            echo("Error!");
+            if ($assetID == $assetRelationParentID)
+            {
+                $html = $html . "<h1>Container Unset</h1>\n";
+                EchoAssetLinks($baseLSURL,$assetID);
+                $addContainerAssetRelation = false;
+                $assetRelationParentID = '';
+
+            } else {
+                $html = $html . "<h1>Container Set</h1>\n";
+                SetAssetCustomBarcodeScanTime($assetID,$cfg['baseDomain']);
+                InsertAssetCommentBarcodeScanTime($assetID,$cfg['baseDomain']);
+                EchoAssetLinks($baseLSURL,$assetID);
+                $addContainerAssetRelation = true;
+                $assetRelationParentID = $assetID;
+            }
+        } else {
+            if ($addContainerAssetRelation)
+            {
+                $html = $html . "<h1>Adding Asset Relationship</h1>\n";
+                SetAssetCustomBarcodeScanTime($assetID,$cfg['baseDomain']);
+                InsertAssetCommentBarcodeScanTime($assetID,$cfg['baseDomain']);
+                EchoAssetLinks($baseLSURL,$assetID);
+                AddAssetRelationToParent($assetID,$assetRelationParentID,$cfg['baseDomain'],$containerAssetRelationshipType);
+            } else {
+                if ($inventoryRoom)
+                    {
+                        $oldInventoryInfo = GetAssetInventoryInfo($assetID,$cfg['baseDomain']);
+                        PrintAssetInventoryInfo($cfg['baseDomain'],$oldInventoryInfo);
+                        InsertAssetCommentAuditTrail($assetID,$cfg['baseDomain'],$oldInventoryInfo,false);
+                        UpdateAssetInventory($assetID,$inventoryLocation,$inventoryBuilding,$inventoryDepartment,$inventoryBranchoffice,$cfg['baseDomain']);
+                    }
+                SetAssetCustomBarcodeScanTime($assetID,$cfg['baseDomain']);
+                InsertAssetCommentBarcodeScanTime($assetID,$cfg['baseDomain']);
+                PrintAssetInventoryInfo($cfg['baseDomain'],GetAssetInventoryInfo($assetID,$cfg['baseDomain']),$assetID);
+                PrintAssetUserRelations(GetAssetUserRelations($assetID,$cfg['baseDomain']));
+            }
         }
     }
+    else
+        {
+            $html = $html . "<p>Serial Invalid!</p>\n";
+            $html = $html . "<script type=\"text/javascript\">startFadeDec(255, 50, 50, 255, 255, 255, 20);</script>\n";
 
+        }
+} else { $html = $html . "<h2>Please enter/scan a valid Asset Tag Barcode</h2>\n"; }
 
-function GetAssetID($barcodeValue,$baseDomain)
-    {
-        try
-        {
-            $conn = OpenConnection($baseDomain);
-            $barcodeString = "'%" . ($str = ltrim($barcodeValue, '0')) . "%'";
-            $tsql = "SELECT AssetID FROM dbo.tblAssetCustom where BarCode LIKE " . $barcodeString;
-            $getAsset = sqlsrv_query($conn, $tsql);
-            if ($getAsset == FALSE)
-                die(sqlsrv_errors());
-            Alert($getAsset);
-			while ($row = sqlsrv_fetch_array($getAsset)) {
-				foreach($row as $field) {
-			        Alert($field);
-					return(htmlspecialchars($field));
-				}
-			}
-            sqlsrv_free_stmt($getAsset);
-            sqlsrv_close($conn);
-        }
-        catch(Exception $e)
-        {
-            echo("Error!");
-        }
-    }
+$html = $html . "<section id=\"container\" class=\"container\">
+      <div id=\"interactive\" class=\"viewport\"></div>
+    </section>
+    <script src=\"/quaggaJS/example/vendor/jquery-1.9.0.min.js\" type=\"text/javascript\"></script>
+    <script src=\"//webrtc.github.io/adapter/adapter-latest.js\" type=\"text/javascript\"></script>
+    <script src=\"/quaggaJS/dist/quagga.js\" type=\"text/javascript\"></script>
+    <script src=\"/scripts/scanScript.js\" type=\"text/javascript\"></script>
+";
 
-function GetAssetIDBySerial($serialValue,$baseDomain)
-    {
-        try
-        {
-            $conn = OpenConnection($baseDomain);
-            $serialString = "'%" . ($str = ltrim($serialValue, ' ')) . "%'";
-            $tsql = "SELECT AssetID FROM dbo.tblAssetCustom where SerialNumber LIKE " . $serialString;
-            Alert($tsql);
-            $getAsset = sqlsrv_query($conn, $tsql);
-            if ($getAsset == FALSE)
-                die(sqlsrv_errors());
-            Alert($getAsset);
-			while ($row = sqlsrv_fetch_array($getAsset)) {
-				foreach($row as $field) {
-			        Alert($field);
-					return(htmlspecialchars($field));
-				}
-			}
-            sqlsrv_free_stmt($getAsset);
-            sqlsrv_close($conn);
-        }
-        catch(Exception $e)
-        {
-            echo("Error!");
-        }
-    }
+echo($html);
 
-function GetName($assetID,$baseDomain)
-    {
-        try
-        {
-            $conn = OpenConnection($baseDomain);
-            $tsql = "SELECT AssetName FROM dbo.tblAssets where AssetID=" . $assetID;
-            $getAsset = sqlsrv_query($conn, $tsql);
-            if ($getAsset == FALSE)
-                die(sqlsrv_errors());
-			while ($row = sqlsrv_fetch_array($getAsset)) {
-				foreach($row as $field) {
-				Alert($field);
-					return(htmlspecialchars($field));
-			    }
-			}
-            sqlsrv_free_stmt($getAsset);
-            sqlsrv_close($conn);
-        }
-        catch(Exception $e)
-        {
-            echo("Error!");
-        }
-    }
 ?>

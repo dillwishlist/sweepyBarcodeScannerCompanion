@@ -392,6 +392,35 @@ function GetAssetID($barcodeValue,$baseDomain)
         }
     }
 
+
+function GetAssetIDBySerial($serialValue,$baseDomain)
+    {
+        try
+        {
+            $conn = OpenConnection($baseDomain);
+            $serialString = "'%" . ($str = ltrim($serialValue, ' ')) . "%'";
+            $tsql = "SELECT AssetID FROM dbo.tblAssetCustom where SerialNumber LIKE " . $serialString;
+            Alert($tsql);
+            $getAsset = sqlsrv_query($conn, $tsql);
+            if ($getAsset == FALSE)
+                die(sqlsrv_errors());
+            Alert($getAsset);
+			while ($row = sqlsrv_fetch_array($getAsset)) {
+				foreach($row as $field) {
+			        Alert($field);
+					return(htmlspecialchars($field));
+				}
+			}
+            sqlsrv_free_stmt($getAsset);
+            sqlsrv_close($conn);
+        }
+        catch(Exception $e)
+        {
+            echo("Error!");
+        }
+    }
+
+
 function GetAssetInfo($assetId,$baseDomain)
     {
         global $html;
