@@ -3,6 +3,11 @@
 	{
 	    $serialValue = $_POST["serialNumber"];
 	    Alert($serialValue . "\r\n");
+	}
+	elseif (isset($_GET['serial']))
+	{
+		$serialValue = filter_input(INPUT_GET, 'serial', FILTER_SANITIZE_URL);
+		Alert($serialValue . "\r\n");
 	} else {
 		$serialValue = "";
 		echo("No value set!\r\n");
