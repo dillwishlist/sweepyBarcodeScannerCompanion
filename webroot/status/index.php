@@ -19,9 +19,6 @@
 $baseLSURL = "https://" . $cfg['baseDomain'] . "/asset.aspx?AssetID=";
 $containerAssetRelationshipType = "5";
 
-            $explodedBarcode = explode("_",$barcodeValue);
-//            PrintAssetExplosion($explodedBarcode);
-
 if ($serialValue) {
     $assetID = GetAssetIDBySerial($serialValue,$cfg['baseDomain']);
     $html = $html . "<script type=\"text/javascript\">startFadeDec(50, 255, 50, 255, 255, 255, 20);</script>\n";
