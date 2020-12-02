@@ -1,5 +1,5 @@
 <?php
-	require_once '../../classes/sweepy.php';
+	require_once $_SERVER["DOCUMENT_ROOT"] . '../classes/sweepy.php';
 
 	if (isset($_POST["serialNumber"]))
 	{
