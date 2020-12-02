@@ -320,7 +320,7 @@ function PrintAssetInventoryInfo($baseLSURL,$assetInfoArray,$assetID)
         $html = $html . "<p>Building: " . $assetInfoArray[2] . "</p>\n";
         $html = $html . "<p>Department: " . $assetInfoArray[3] . "</p>\n";
         $html = $html . "<p>Branch Office: " . $assetInfoArray[4] . "</p>\n";
-        $html = $html . "<h3>Current Disposition: " . $assetInfoArray[5] . "</h3>\n";
+        $html = $html . "<p>Current Disposition: <b>" . $assetInfoArray[5] . "</b></p>\n";
         $html = $html . "<p>Last Physical Inventory: " . $assetInfoArray[6] . "</p>\n";
     }
 
