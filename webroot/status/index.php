@@ -23,7 +23,7 @@ if ($serialValue) {
 	$assetID = GetAssetIDBySerial($serialValue,$cfg['baseDomain']);
 	$html = $html . "<script type=\"text/javascript\">startFadeDec(50, 255, 50, 255, 255, 255, 20);</script>\n";
 	if ($assetID) {
-		PrintAssetInventoryInfo($cfg['baseDomain'],GetAssetInventoryInfo($assetID,$cfg['baseDomain']));
+		PrintAssetInventoryInfo($cfg['baseDomain'],GetAssetInventoryInfo($assetID,$cfg['baseDomain']),$assetID);
 		PrintAssetUserRelations(GetAssetUserRelations($assetID,$cfg['baseDomain']));
 	}
 	else
