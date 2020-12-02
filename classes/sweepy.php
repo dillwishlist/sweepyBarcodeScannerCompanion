@@ -320,6 +320,7 @@ function PrintAssetInventoryInfo($baseLSURL,$assetInfoArray,$assetID)
         $html = $html . "<p>Building: " . $assetInfoArray[2] . "</p>\n";
         $html = $html . "<p>Department: " . $assetInfoArray[3] . "</p>\n";
         $html = $html . "<p>Branch Office:" . $assetInfoArray[4] . "</p>\n";
+        $html = $html . "<h3>Current Disposition: " . $assetInfoArray[5] . "</h3>\n";
         $html = $html . "<p>Last Physical Inventory: " . $assetInfoArray[5] . "</p>\n";
     }
 
@@ -453,7 +454,7 @@ function GetAssetInventoryInfo($assetId,$baseDomain)
         try
         {
             $conn = OpenConnection($baseDomain);
-            $tsql = "SELECT dbo.tblAssets.AssetName,dbo.tblAssetCustom.Location,dbo.tblAssetCustom.Building,dbo.tblAssetCustom.Department,dbo.tblAssetCustom.Branchoffice,dbo.tblAssetCustom.Custom15 FROM dbo.tblAssets inner join dbo.tblAssetCustom on dbo.tblAssets.AssetID=dbo.tblAssetCustom.AssetID where dbo.tblAssets.AssetID=" . $assetId;
+            $tsql = "SELECT dbo.tblAssets.AssetName,dbo.tblAssetCustom.Location,dbo.tblAssetCustom.Building,dbo.tblAssetCustom.Department,dbo.tblAssetCustom.Branchoffice,dbo.tblAssetCustom.Custom01,dbo.tblAssetCustom.Custom15 FROM dbo.tblAssets inner join dbo.tblAssetCustom on dbo.tblAssets.AssetID=dbo.tblAssetCustom.AssetID where dbo.tblAssets.AssetID=" . $assetId;
             $getAsset = sqlsrv_query($conn, $tsql);
             if ($getAsset == FALSE)
                 die(sqlsrv_errors());
@@ -461,7 +462,7 @@ function GetAssetInventoryInfo($assetId,$baseDomain)
             while ($row = sqlsrv_fetch_array($getAsset))
                 {
 //                    Alert($row);
-                    return array(htmlspecialchars($row['AssetName']),htmlspecialchars($row['Location']),htmlspecialchars($row['Building']),htmlspecialchars($row['Department']),htmlspecialchars($row['Branchoffice']),htmlspecialchars($row['Custom15']));
+                    return array(htmlspecialchars($row['AssetName']),htmlspecialchars($row['Location']),htmlspecialchars($row['Building']),htmlspecialchars($row['Department']),htmlspecialchars($row['Branchoffice']),htmlspecialchars($row['Custom01']),htmlspecialchars($row['Custom15']));
 //                    $assetName,$assetLocation,$assetBuilding,$assetDepartment,$assetBranchOffice
                 }
             sqlsrv_free_stmt($getAsset);
