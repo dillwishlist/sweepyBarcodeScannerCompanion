@@ -701,7 +701,7 @@ function BeginAssetRelation($assetID,$baseDomain,$commentContains="",$userName="
     {
         {
             $conn = OpenConnection($baseDomain);
-            $tsql = "insert into dbo.tblAssetUserRelations (Username, Userdomain, AssetID, Type, Comments) values ('" . $userName . "','ORCSD'," . $assetID . ",12,'" . $commentContains . "')"
+            $tsql = "insert into dbo.tblAssetUserRelations (Username, Userdomain, AssetID, Type, Comments) values ('" . $userName . "','ORCSD'," . $assetID . ",12,'" . $commentContains . "')";
             $setAssetRelation = sqlsrv_query($conn, $tsql);
             if ($setAssetRelation == FALSE)
                 die(sqlsrv_errors());
