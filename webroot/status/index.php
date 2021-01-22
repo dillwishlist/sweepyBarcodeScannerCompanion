@@ -23,9 +23,9 @@ if ($serialValue) {
 	$assetID = GetAssetIDBySerial($serialValue,$cfg['baseDomain']);
 	if ($assetID) {
 		PrintAssetInventoryInfo($cfg['baseDomain'],GetAssetInventoryInfo($assetID,$cfg['baseDomain']),$assetID);
-        echo("<h2>User Relationships</h2>\n<hr />");
+        $html = $html . "<h2>User Relationships</h2>\n<hr />";
         PrintAssetUserRelations(GetAssetUserRelations($assetID,$cfg['baseDomain']));
-        echo("<h2>Open Tickets</h2>\n<hr />");
+        $html = $html . "<h2>Open Tickets</h2>\n<hr />";
         $tickets = array();
         $tickets = array_unique(GetAssetTickets($assetID,$cfg['baseDomain']));
         PrintUserTickets($tickets);
@@ -35,7 +35,7 @@ if ($serialValue) {
             }
             else
             {
-                $html = $html . "<script type=\"text/javascript\">startFadeDec(50, 255, 255, 255, 255, 255, 20);</script>\n";
+                $html = $html . "<script type=\"text/javascript\">startFadeDec(255, 255, 50, 255, 255, 255, 20);</script>\n";
             }
 	}
 	else
