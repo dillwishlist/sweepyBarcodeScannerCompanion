@@ -508,8 +508,6 @@ function GetAssetUserRelations($assetId,$baseDomain)
     {
         global $html;
         $relationsArray = array();
-        $endString = ""
-        $rowVisibility = "active";
         try
         {
             $conn = OpenConnection($baseDomain);
@@ -525,6 +523,11 @@ function GetAssetUserRelations($assetId,$baseDomain)
                     {
                         $endString = (" through " . date_format($row['EndDate'], 'Y-m-d'));
                         $rowVisibility = "archive";
+                    }
+                    else
+                    {
+                        $endString = "";
+                        $rowVisibility = "active";
                     }
                     $relationsArray[] = ('<div class="' . $rowVisibility . '"><a href="https://' . $baseDomain . '/user.aspx?username=' . $row['Username'] . '&userdomain=orcsd" target="_blank">' . $row['Username'] . '</a> Since ' . date_format($row['StartDate'], 'Y-m-d') . $endString . ' <br \> ' . $row['Comments'] . '</div>');
                 }
