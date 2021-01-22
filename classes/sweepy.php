@@ -562,7 +562,7 @@ function GetAssetTickets($assetID,$baseDomain)
                 die(sqlsrv_errors());
             while ($row = sqlsrv_fetch_array($getTicket)) {
                 foreach($row as $field) {
-                    $ticketArray[] = ('<a href="https://' . $baseDomain . '/helpdesk/ticket.aspx?tid=' . $row['ticketid'] . '" target="_blank">' . $row['subject'] . '</a> &mdash; Agent: ' . $row['agentid'] . '<br /> Opened: ' . $row['date']->format('d/m/Y') . ' Updated: ' . $row['updated']->format('d/m/Y') . ' Deadline: ' . $row['deadline']->format('d/m/Y'));
+                    $ticketArray[] = ('<a href="https://' . $baseDomain . '/helpdesk/ticket.aspx?tid=' . $row['ticketid'] . '" target="_blank">' . $row['subject'] . '</a> &mdash; Agent: ' . $row['agentid'] . '<br /> Opened: ' . $row['date']->format('m/d/Y') . ' Updated: ' . $row['updated']->format('m/d/Y') . ' Deadline: ' . $row['deadline']->format('m/d/Y'));
                 }
             }
             sqlsrv_free_stmt($getTicket);
