@@ -59,14 +59,21 @@
     }
 
     if (key_exists('manualAction',$_COOKIE))
-        $manualAction = $_COOKIE['manualAction'];
-    } elseif (isset($_POST["manualAction"])) {
-        $manualAction = $_POST["manualAction"];
-    } elseif (isset($_GET['manualAction'])) {
-        $manualAction = filter_input(INPUT_GET, 'manualAction', FILTER_SANITIZE_URL);
-    } else {
-        $manualAction = "";
-    }
+        {
+            $manualAction = $_COOKIE['manualAction'];
+        }
+    elseif (isset($_POST["manualAction"]))
+        {
+            $manualAction = $_POST["manualAction"];
+        }
+    elseif (isset($_GET['manualAction']))
+        {
+            $manualAction = filter_input(INPUT_GET, 'manualAction', FILTER_SANITIZE_URL);
+        }
+    else
+        {
+            $manualAction = "";
+        }
 
 
 
