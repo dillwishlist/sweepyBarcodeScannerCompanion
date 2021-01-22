@@ -3,11 +3,11 @@
     require_once '../classes/sweepy.php';
 
 
-if isset($_REQUEST["barcodeValue"])
+if (isset($_REQUEST["barcodeValue"])?$_REQUEST["barcodeValue"]:"")
     {
         $barcodeValue = (isset($_REQUEST["barcodeValue"])?$_REQUEST["barcodeValue"]:"");
     }
-    elseif isset($previousAssetID)
+    elseif (isset($previousAssetID))
     {
         $barcodeValue = $previousAssetID;
     }
