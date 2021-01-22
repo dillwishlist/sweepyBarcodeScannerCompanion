@@ -2,9 +2,11 @@
 @import url("https://fonts.googleapis.com/css?family=Ubuntu:400,700|Cabin+Condensed:400,600");
 
 body {
+
 }
 
 h1, h2, h3, h4 {
+
 }
 
 header {
@@ -37,6 +39,16 @@ footer {
   width: 640px;
   margin: 20px auto;
   padding: 10px;
+}
+
+.archive {
+  opacity: .5;
+  background: #cccccc;
+
+}
+
+.active {
+
 }
 
 .button {

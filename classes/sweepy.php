@@ -515,12 +515,21 @@ function GetAssetUserRelations($assetId,$baseDomain)
             $getAsset = sqlsrv_query($conn, $tsql);
             if ($getAsset == FALSE)
                 die(sqlsrv_errors());
-//            Alert($getAsset);
+            Alert($getAsset);
             while ($row = sqlsrv_fetch_array($getAsset))
                 {
                     Alert($row);
-                    $relationsArray[] = ('<a href="https://' . $baseDomain . '/user.aspx?username=' . $row['Username'] . '&userdomain=orcsd" target="_blank">' . $row['Username'] . '</a> Since ' . date_format($row['StartDate'], 'Y-m-d') . ' through ' . date_format($row['EndDate'], 'Y-m-d') . ' <br \> ' . $row['Comments'] . '');
-//                    $assetName,$assetLocation,$assetBuilding,$assetDepartment,$assetBranchOffice
+                    if ($row['EndDate'])
+                    {
+                        $endString = (" through " . date_format($row['EndDate'], 'Y-m-d'));
+                        $rowVisibility = "archive";
+                    }
+                    else
+                    {
+                        $endString = ""
+                        $rowVisibility = "active";
+                    }
+                    $relationsArray[] = ('<div class="' . $rowVisibility . '"><a href="https://' . $baseDomain . '/user.aspx?username=' . $row['Username'] . '&userdomain=orcsd" target="_blank">' . $row['Username'] . '</a> Since ' . date_format($row['StartDate'], 'Y-m-d') . $endString . ' <br \> ' . $row['Comments'] . '</div>');
                 }
             sqlsrv_free_stmt($getAsset);
             sqlsrv_close($conn);
