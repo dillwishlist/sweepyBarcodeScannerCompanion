@@ -95,9 +95,9 @@ elseif (isset($barcodeValue) && $barcodeValue)
                     SetAssetCustomBarcodeScanTime($assetID,$cfg['baseDomain']);
                     InsertAssetCommentBarcodeScanTime($assetID,$cfg['baseDomain']);
                     PrintAssetInventoryInfo($cfg['baseDomain'],GetAssetInventoryInfo($assetID,$cfg['baseDomain']),$assetID);
-                    echo("<h2>User Relationships</h2>\n<hr />")
+                    echo("<h2>User Relationships</h2>\n<hr />");
                     PrintAssetUserRelations(GetAssetUserRelations($assetID,$cfg['baseDomain']));
-                    echo("<h2>Open Tickets</h2>\n<hr />")
+                    echo("<h2>Open Tickets</h2>\n<hr />");
                     PrintUserTickets(array_unique(GetAssetTickets($assetID,$cfg['baseDomain'])));
                 }
             }
