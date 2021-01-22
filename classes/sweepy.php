@@ -511,7 +511,7 @@ function GetAssetUserRelations($assetId,$baseDomain)
         try
         {
             $conn = OpenConnection($baseDomain);
-            $tsql = "select dbo.tblAssetUserRelations.Username,tblAssetUserRelations.StartDate,tblAssetUserRelations.EndDate,tblAssetUserRelations.Comments from dbo.tblAssetUserRelations where dbo.tblAssetUserRelations.AssetID=" . $assetId;
+            $tsql = "select dbo.tblAssetUserRelations.Username,tblAssetUserRelations.StartDate,tblAssetUserRelations.EndDate,tblAssetUserRelations.Comments from dbo.tblAssetUserRelations where dbo.tblAssetUserRelations.AssetID=" . $assetId . " order by StartDate DESC";
             $getAsset = sqlsrv_query($conn, $tsql);
             if ($getAsset == FALSE)
                 die(sqlsrv_errors());

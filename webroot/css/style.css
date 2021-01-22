@@ -51,9 +51,9 @@ footer {
 }
 
 .button {
-  background-color: #ccffcc;
+  background-color: #cccccc;
   border: none;
-  color: white;
+  color: #000000;
   padding: 20px;
   text-align: center;
   text-decoration: none;
