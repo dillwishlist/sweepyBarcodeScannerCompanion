@@ -738,9 +738,10 @@ function BeginAssetRelation($assetID,$baseDomain,$commentContains="",$userName="
     }*/
 
 function RefreshPage()
-	{
-	    window.location = window.location.pathname;
-	}
+    {
+        $page = $_SERVER['PHP_SELF'];
+        $sec = "0";
+        header("Refresh: $sec; url=$page");	}
 
 function InsertAssetCommentAuditTrail($assetID,$baseDomain,$inventoryInfoArray,$isNew)
     {
