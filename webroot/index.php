@@ -7,10 +7,6 @@ if (isset($_REQUEST["barcodeValue"])?$_REQUEST["barcodeValue"]:"")
     {
         $barcodeValue = (isset($_REQUEST["barcodeValue"])?$_REQUEST["barcodeValue"]:"");
     }
-    elseif (isset($previousAssetID))
-    {
-        $barcodeValue = $previousAssetID;
-    }
 
 $html = $html . "
 <h3>Sweepy Barcode Scanner Companion</h3>
@@ -51,76 +47,142 @@ elseif ($explodedBarcode[0] == $cfg['roomPrefix'] && $inventoryRoom == true)
         $inventoryDepartment = false;
         $inventoryBranchoffice = false;
     }
-elseif ($barcodeValue) {
-    $assetID = GetAssetID($barcodeValue,$cfg['baseDomain']);
-    $html = $html . "<script type=\"text/javascript\">startFadeDec(50, 255, 50, 255, 255, 255, 20);</script>\n";
-    if ($assetID) {
-        $assetType = GetAssetType($assetID,$cfg['baseDomain']);
-        if ($assetType == 901 || $assetType == 908)
+elseif ($barcodeValue)
+	{
+        $assetID = GetAssetID($barcodeValue,$cfg['baseDomain']);
+        $html = $html . "<script type=\"text/javascript\">startFadeDec(50, 255, 50, 255, 255, 255, 20);</script>\n";
+        if ($assetID)
         {
-            if ($assetID == $assetRelationParentID)
+            $assetType = GetAssetType($assetID,$cfg['baseDomain']);
+            if ($assetType == 901 || $assetType == 908)
             {
-                $html = $html . "<h1>Container Unset</h1>\n";
-                EchoAssetLinks($baseLSURL,$assetID);
-                $addContainerAssetRelation = false;
-                $assetRelationParentID = '';
-
-            } else {
-                $html = $html . "<h1>Container Set</h1>\n";
-                SetAssetCustomBarcodeScanTime($assetID,$cfg['baseDomain']);
-                InsertAssetCommentBarcodeScanTime($assetID,$cfg['baseDomain']);
-                EchoAssetLinks($baseLSURL,$assetID);
-                $addContainerAssetRelation = true;
-                $assetRelationParentID = $assetID;
+                if ($assetID == $assetRelationParentID)
+                {
+                    $html = $html . "<h1>Container Unset</h1>\n";
+                    EchoAssetLinks($baseLSURL,$assetID);
+                    $addContainerAssetRelation = false;
+                    $assetRelationParentID = '';
+    
+                }
+                else
+                {
+                    $html = $html . "<h1>Container Set</h1>\n";
+                    SetAssetCustomBarcodeScanTime($assetID,$cfg['baseDomain']);
+                    InsertAssetCommentBarcodeScanTime($assetID,$cfg['baseDomain']);
+                    EchoAssetLinks($baseLSURL,$assetID);
+                    $addContainerAssetRelation = true;
+                    $assetRelationParentID = $assetID;
+                }
             }
-        } else {
-            if ($addContainerAssetRelation)
+            else
             {
-                $html = $html . "<h1>Adding Asset Relationship</h1>\n";
-                SetAssetCustomBarcodeScanTime($assetID,$cfg['baseDomain']);
-                InsertAssetCommentBarcodeScanTime($assetID,$cfg['baseDomain']);
-                EchoAssetLinks($baseLSURL,$assetID);
-                AddAssetRelationToParent($assetID,$assetRelationParentID,$cfg['baseDomain'],$containerAssetRelationshipType);
-            } else {
-                if ($inventoryRoom)
-                    {
-                        $oldInventoryInfo = GetAssetInventoryInfo($assetID,$cfg['baseDomain']);
-                        PrintAssetInventoryInfo($cfg['baseDomain'],$oldInventoryInfo);
-                        InsertAssetCommentAuditTrail($assetID,$cfg['baseDomain'],$oldInventoryInfo,false);
-                        UpdateAssetInventory($assetID,$inventoryLocation,$inventoryBuilding,$inventoryDepartment,$inventoryBranchoffice,$cfg['baseDomain']);
-                    }
-                SetAssetCustomBarcodeScanTime($assetID,$cfg['baseDomain']);
-                InsertAssetCommentBarcodeScanTime($assetID,$cfg['baseDomain']);
-                PrintAssetInventoryInfo($cfg['baseDomain'],GetAssetInventoryInfo($assetID,$cfg['baseDomain']),$assetID);
-                PrintAssetUserRelations(GetAssetUserRelations($assetID,$cfg['baseDomain']));
-                PrintUserTickets(array_unique(GetAssetTickets($assetID,$cfg['baseDomain'])));
+                if ($addContainerAssetRelation)
+                {
+                    $html = $html . "<h1>Adding Asset Relationship</h1>\n";
+                    SetAssetCustomBarcodeScanTime($assetID,$cfg['baseDomain']);
+                    InsertAssetCommentBarcodeScanTime($assetID,$cfg['baseDomain']);
+                    EchoAssetLinks($baseLSURL,$assetID);
+                    AddAssetRelationToParent($assetID,$assetRelationParentID,$cfg['baseDomain'],$containerAssetRelationshipType);
+                }
+                else
+                {
+                    if ($inventoryRoom)
+                        {
+                            $oldInventoryInfo = GetAssetInventoryInfo($assetID,$cfg['baseDomain']);
+                            PrintAssetInventoryInfo($cfg['baseDomain'],$oldInventoryInfo);
+                            InsertAssetCommentAuditTrail($assetID,$cfg['baseDomain'],$oldInventoryInfo,false);
+                            UpdateAssetInventory($assetID,$inventoryLocation,$inventoryBuilding,$inventoryDepartment,$inventoryBranchoffice,$cfg['baseDomain']);
+                        }
+                    SetAssetCustomBarcodeScanTime($assetID,$cfg['baseDomain']);
+                    InsertAssetCommentBarcodeScanTime($assetID,$cfg['baseDomain']);
+                    PrintAssetInventoryInfo($cfg['baseDomain'],GetAssetInventoryInfo($assetID,$cfg['baseDomain']),$assetID);
+                    PrintAssetUserRelations(GetAssetUserRelations($assetID,$cfg['baseDomain']));
+                    PrintUserTickets(array_unique(GetAssetTickets($assetID,$cfg['baseDomain'])));
+                }
             }
         }
-        switch ($manualAction)
-            {
-                case 'startRepair':
-                    BeginAssetRelation($previousAssetID,$cfg['baseDomain'],'Repair','addws');
-                    RefreshPage();
-                    break;
-                case 'endRepair':
-                    EndAssetRelation($previousAssetID,$cfg['baseDomain'],'Repair');
-                    RefreshPage();
-                    break;
-                case 'endRelationships':
-                    EndAssetRelation($previousAssetID,$cfg['baseDomain'],'');
-                    RefreshPage();
-                    break;
-                default:
-            }
-
-    }
-    else
+        else
         {
             $html = $html . "<p>Barcode Invalid!</p>\n";
             $html = $html . "<script type=\"text/javascript\">startFadeDec(255, 50, 50, 255, 255, 255, 20);</script>\n";
 
         }
-} else { $html = $html . "<h2>Please enter/scan a valid Asset Tag Barcode</h2>\n"; }
+    }
+    elseif ($previousAssetId)
+    {
+        switch ($manualAction)
+        {
+            case 'startRepair':
+                BeginAssetRelation($previousAssetID,$cfg['baseDomain'],'Repair','addws');
+                RefreshPage();
+                break;
+            case 'endRepair':
+                EndAssetRelation($previousAssetID,$cfg['baseDomain'],'Repair');
+                RefreshPage();
+                break;
+            case 'endRelationships':
+                EndAssetRelation($previousAssetID,$cfg['baseDomain'],'');
+                RefreshPage();
+                break;
+            default:
+        }
+        $assetID = $previousAssetID;
+//        $html = $html . "<script type=\"text/javascript\">startFadeDec(50, 255, 50, 255, 255, 255, 20);</script>\n";
+        if ($assetID)
+        {
+            $assetType = GetAssetType($assetID,$cfg['baseDomain']);
+            if ($assetType == 901 || $assetType == 908)
+            {
+                if ($assetID == $assetRelationParentID)
+                {
+                    $html = $html . "<h1>Container Unset</h1>\n";
+                    EchoAssetLinks($baseLSURL,$assetID);
+                    $addContainerAssetRelation = false;
+                    $assetRelationParentID = '';
+    
+                }
+                else
+                {
+                    $html = $html . "<h1>Container Set</h1>\n";
+                    SetAssetCustomBarcodeScanTime($assetID,$cfg['baseDomain']);
+                    InsertAssetCommentBarcodeScanTime($assetID,$cfg['baseDomain']);
+                    EchoAssetLinks($baseLSURL,$assetID);
+                    $addContainerAssetRelation = true;
+                    $assetRelationParentID = $assetID;
+                }
+            }
+            else
+            {
+                if ($addContainerAssetRelation)
+                {
+                    $html = $html . "<h1>Adding Asset Relationship</h1>\n";
+                    SetAssetCustomBarcodeScanTime($assetID,$cfg['baseDomain']);
+                    InsertAssetCommentBarcodeScanTime($assetID,$cfg['baseDomain']);
+                    EchoAssetLinks($baseLSURL,$assetID);
+                    AddAssetRelationToParent($assetID,$assetRelationParentID,$cfg['baseDomain'],$containerAssetRelationshipType);
+                }
+                else
+                {
+                    if ($inventoryRoom)
+                        {
+                            $oldInventoryInfo = GetAssetInventoryInfo($assetID,$cfg['baseDomain']);
+                            PrintAssetInventoryInfo($cfg['baseDomain'],$oldInventoryInfo);
+                            InsertAssetCommentAuditTrail($assetID,$cfg['baseDomain'],$oldInventoryInfo,false);
+                            UpdateAssetInventory($assetID,$inventoryLocation,$inventoryBuilding,$inventoryDepartment,$inventoryBranchoffice,$cfg['baseDomain']);
+                        }
+                    SetAssetCustomBarcodeScanTime($assetID,$cfg['baseDomain']);
+                    InsertAssetCommentBarcodeScanTime($assetID,$cfg['baseDomain']);
+                    PrintAssetInventoryInfo($cfg['baseDomain'],GetAssetInventoryInfo($assetID,$cfg['baseDomain']),$assetID);
+                    PrintAssetUserRelations(GetAssetUserRelations($assetID,$cfg['baseDomain']));
+                    PrintUserTickets(array_unique(GetAssetTickets($assetID,$cfg['baseDomain'])));
+                }
+            }
+
+    }
+    else
+    {
+        $html = $html . "<h2>Please enter/scan a valid Asset Tag Barcode</h2>\n";
+    }
 
 $html = $html . "<div id=\"manualButtonBox\"><a href=\"?manualAction=startRepair\">Start Repair</a>&nbsp;<a href=\"?manualAction=endRepair\">End Repair</a>&nbsp;<a href=\"?manualAction=endRelationships\">End Relationships</a>&nbsp;</div>";
 
