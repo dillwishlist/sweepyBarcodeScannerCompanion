@@ -18,6 +18,19 @@ $containerAssetRelationshipType = "5";
             $explodedBarcode = explode("_",$barcodeValue);
 //            PrintAssetExplosion($explodedBarcode);
 
+switch ($manualAction)
+    {
+        case startRepair:
+            BeginAssetRelation($assetID,$cfg['baseDomain'],'Repair','addws');
+            break;
+        case endRepair:
+            EndAssetRelation($assetID,$cfg['baseDomain'],'Repair');
+            break;
+        case endRelationships:
+            EndAssetRelation($assetID,$cfg['baseDomain'],'');
+            break;
+    }
+
 if ($inventoryRoom)
     {
         $html = $html . "<h3>Inventory Mode</h3>\n";
@@ -84,7 +97,7 @@ elseif ($barcodeValue) {
                 InsertAssetCommentBarcodeScanTime($assetID,$cfg['baseDomain']);
                 PrintAssetInventoryInfo($cfg['baseDomain'],GetAssetInventoryInfo($assetID,$cfg['baseDomain']),$assetID);
                 PrintAssetUserRelations(GetAssetUserRelations($assetID,$cfg['baseDomain']));
-                PrintUserTickets(array_unique(GetAssetTickets($assetID,$cfg['baseDomain'])));
+                PrintUserTickets(array_unique(GetAssetTickets($assetID,$cfg['baseDomain']));
             }
         }
     }
@@ -95,6 +108,8 @@ elseif ($barcodeValue) {
 
         }
 } else { $html = $html . "<h2>Please enter/scan a valid Asset Tag Barcode</h2>\n"; }
+
+$html = $html . "<div id=\"manualButtonBox\"><a href=\"#manualAction=startRepair>Start Repair</a>&nbsp;<a href=\"#manualAction=endRepair>End Repair</a>&nbsp;<a href=\"#manualAction=endRelationships>End Relationships</a>&nbsp;\"";
 
 $html = $html . "<section id=\"container\" class=\"container\">
       <div id=\"interactive\" class=\"viewport\"></div>
