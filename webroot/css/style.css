@@ -2,16 +2,9 @@
 @import url("https://fonts.googleapis.com/css?family=Ubuntu:400,700|Cabin+Condensed:400,600");
 
 body {
-  margin: 10px;
-  font-family: Ubuntu, sans-serif;
-  color: #1e1e1e;
-  font-weight: normal;
-  padding-top: 0;
-  padding-left: 10;
 }
 
 h1, h2, h3, h4 {
-  font-family: "Cabin Condensed", sans-serif;
 }
 
 header {
@@ -47,7 +40,7 @@ footer {
 }
 
 .button {
-  background-color: #4C4C4C;
+  background-color: #ccffcc;
   border: none;
   color: white;
   padding: 20px;
