@@ -699,6 +699,7 @@ function EndAssetRelation($assetID,$baseDomain,$commentContains="")
 
 function BeginAssetRelation($assetID,$baseDomain,$commentContains="",$userName="addws")
     {
+        try
         {
             $conn = OpenConnection($baseDomain);
             $tsql = "insert into dbo.tblAssetUserRelations (Username, Userdomain, AssetID, Type, Comments) values ('" . $userName . "','ORCSD'," . $assetID . ",12,'" . $commentContains . "')";
