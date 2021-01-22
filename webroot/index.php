@@ -88,6 +88,20 @@ elseif ($barcodeValue) {
                 PrintUserTickets(array_unique(GetAssetTickets($assetID,$cfg['baseDomain'])));
             }
         }
+        switch ($manualAction)
+            {
+                case 'startRepair':
+                    BeginAssetRelation($assetID,$cfg['baseDomain'],'Repair','addws');
+                    break;
+                case 'endRepair':
+                    EndAssetRelation($assetID,$cfg['baseDomain'],'Repair');
+                    break;
+                case 'endRelationships':
+                    EndAssetRelation($assetID,$cfg['baseDomain'],'');
+                    break;
+                default:
+            }
+
     }
     else
         {
@@ -96,20 +110,6 @@ elseif ($barcodeValue) {
 
         }
 } else { $html = $html . "<h2>Please enter/scan a valid Asset Tag Barcode</h2>\n"; }
-
-switch ($manualAction)
-    {
-        case 'startRepair':
-            BeginAssetRelation($assetID,$cfg['baseDomain'],'Repair','addws');
-            break;
-        case 'endRepair':
-            EndAssetRelation($assetID,$cfg['baseDomain'],'Repair');
-            break;
-        case 'endRelationships':
-            EndAssetRelation($assetID,$cfg['baseDomain'],'');
-            break;
-        default:
-    }
 
 $html = $html . "<div id=\"manualButtonBox\"><a href=\"?manualAction=startRepair\">Start Repair</a>&nbsp;<a href=\"?manualAction=endRepair\">End Repair</a>&nbsp;<a href=\"?manualAction=endRelationships\">End Relationships</a>&nbsp;</div>";
 
