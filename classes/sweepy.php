@@ -534,27 +534,27 @@ function GetAssetUserRelations($assetId,$baseDomain)
 
 function UnSetDisposition($assetID,$baseDomain)
     {
-        UpdateCurrentDisposition($assetID,$baseDomain,"")
+        UpdateCurrentDisposition($assetID,$baseDomain,"");
     }
 
 function SetDispositionTicketWork($assetID,$baseDomain)
     {
-        UpdateCurrentDisposition($assetID,$baseDomain,"Ticket Work")
+        UpdateCurrentDisposition($assetID,$baseDomain,"Ticket Work");
     }
 
 function SetDispositionReadyToDeploy($assetID,$baseDomain)
     {
-        UpdateCurrentDisposition($assetID,$baseDomain,"Ready to Deploy")
+        UpdateCurrentDisposition($assetID,$baseDomain,"Ready to Deploy");
     }
 
 function SetDispositionDeployed($assetID,$baseDomain)
     {
-        UpdateCurrentDisposition($assetID,$baseDomain,"Deployed")
+        UpdateCurrentDisposition($assetID,$baseDomain,"Deployed");
     }
 
 function SetDispositionBoneyard($assetID,$baseDomain)
     {
-        UpdateCurrentDisposition($assetID,$baseDomain,"Boneyard")
+        UpdateCurrentDisposition($assetID,$baseDomain,"Boneyard");
     }
 
 function UpdateCurrentDisposition($assetID,$baseDomain,$state="")
