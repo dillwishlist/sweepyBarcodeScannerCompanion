@@ -29,6 +29,8 @@ switch ($manualAction)
         case endRelationships:
             EndAssetRelation($assetID,$cfg['baseDomain'],'');
             break;
+        default:
+
     }
 
 if ($inventoryRoom)
