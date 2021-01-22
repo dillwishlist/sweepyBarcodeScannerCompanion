@@ -134,6 +134,7 @@ elseif ($barcodeValue)
             PrintAssetInventoryInfo($cfg['baseDomain'],GetAssetInventoryInfo($assetID,$cfg['baseDomain']),$assetID);
             PrintAssetUserRelations(GetAssetUserRelations($assetID,$cfg['baseDomain']));
             PrintUserTickets(array_unique(GetAssetTickets($assetID,$cfg['baseDomain'])));
+        }
 
     }
     else
