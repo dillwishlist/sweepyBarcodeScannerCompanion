@@ -111,7 +111,7 @@ elseif ($barcodeValue) {
         }
 } else { $html = $html . "<h2>Please enter/scan a valid Asset Tag Barcode</h2>\n"; }
 
-$html = $html . "<div id=\"manualButtonBox\"><a href=\"#manualAction=startRepair>Start Repair</a>&nbsp;<a href=\"#manualAction=endRepair>End Repair</a>&nbsp;<a href=\"#manualAction=endRelationships>End Relationships</a>&nbsp;\"";
+$html = $html . "<div id=\"manualButtonBox\"><a href=\"#manualAction=startRepair\">Start Repair</a>&nbsp;<a href=\"#manualAction=endRepair\">End Repair</a>&nbsp;<a href=\"#manualAction=endRelationships\">End Relationships</a>&nbsp;\"";
 
 $html = $html . "<section id=\"container\" class=\"container\">
       <div id=\"interactive\" class=\"viewport\"></div>
