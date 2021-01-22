@@ -47,7 +47,7 @@ elseif ($explodedBarcode[0] == $cfg['roomPrefix'] && $inventoryRoom == true)
         $inventoryDepartment = false;
         $inventoryBranchoffice = false;
     }
-elseif ($barcodeValue)
+elseif (isset($barcodeValue) && $barcodeValue)
 	{
         $assetID = GetAssetID($barcodeValue,$cfg['baseDomain']);
         $html = $html . "<script type=\"text/javascript\">startFadeDec(50, 255, 50, 255, 255, 255, 20);</script>\n";
@@ -108,7 +108,7 @@ elseif ($barcodeValue)
 
         }
     }
-    elseif ($previousAssetId)
+    elseif ($previousAssetID)
     {
         switch ($manualAction)
         {
