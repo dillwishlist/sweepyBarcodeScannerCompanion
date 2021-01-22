@@ -27,7 +27,7 @@ if ($serialValue) {
         PrintAssetUserRelations(GetAssetUserRelations($assetID,$cfg['baseDomain']));
         echo("<h2>Open Tickets</h2>\n<hr />");
         $tickets = array();
-        $tickets = array_unique(GetAssetTickets($assetID,$cfg['baseDomain']))
+        $tickets = array_unique(GetAssetTickets($assetID,$cfg['baseDomain']));
         PrintUserTickets($tickets);
         if (count($tickets) == 0)
             {
