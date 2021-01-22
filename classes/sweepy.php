@@ -532,6 +532,51 @@ function GetAssetUserRelations($assetId,$baseDomain)
         }
     }
 
+function UnSetDisposition($assetID,$baseDomain)
+    {
+        UpdateCurrentDisposition($assetID,$baseDomain,"")
+    }
+
+function SetDispositionTicketWork($assetID,$baseDomain)
+    {
+        UpdateCurrentDisposition($assetID,$baseDomain,"Ticket Work")
+    }
+
+function SetDispositionReadyToDeploy($assetID,$baseDomain)
+    {
+        UpdateCurrentDisposition($assetID,$baseDomain,"Ready to Deploy")
+    }
+
+function SetDispositionDeployed($assetID,$baseDomain)
+    {
+        UpdateCurrentDisposition($assetID,$baseDomain,"Deployed")
+    }
+
+function SetDispositionBoneyard($assetID,$baseDomain)
+    {
+        UpdateCurrentDisposition($assetID,$baseDomain,"Boneyard")
+    }
+
+function UpdateCurrentDisposition($assetID,$baseDomain,$state="")
+    {
+        global $html;
+        try
+        {
+            $conn = OpenConnection($baseDomain);
+            $tsql = "UPDATE dbo.tblAssetCustom SET Custom1 = '" . $state . "' where AssetID=" . $assetID;
+            $getAsset = sqlsrv_query($conn, $tsql);
+            if ($getAsset == FALSE)
+                die(sqlsrv_errors());
+            sqlsrv_free_stmt($getAsset);
+            sqlsrv_close($conn);
+        }
+        catch(Exception $e)
+        {
+            $html = $html . "Error!";
+        }
+    }
+    }
+
 function UpdateAssetInventory($assetID,$assetLocation,$assetBuilding,$assetDepartment,$assetBranchoffice,$baseDomain)
     {
         global $html;

@@ -6,6 +6,7 @@
 if (isset($_REQUEST["barcodeValue"])?$_REQUEST["barcodeValue"]:"")
     {
         $barcodeValue = (isset($_REQUEST["barcodeValue"])?$_REQUEST["barcodeValue"]:"");
+        $explodedBarcode = explode("_",$barcodeValue);
     }
 
 $html = $html . "
@@ -19,8 +20,6 @@ $html = $html . "
 $baseLSURL = "https://" . $cfg['baseDomain'] . "/asset.aspx?AssetID=";
 $containerAssetRelationshipType = "5";
 
-            $explodedBarcode = explode("_",$barcodeValue);
-//            PrintAssetExplosion($explodedBarcode);
 
 
 if ($inventoryRoom)
@@ -114,10 +113,12 @@ elseif (isset($barcodeValue) && $barcodeValue)
         {
             case 'startRepair':
                 BeginAssetRelation($previousAssetID,$cfg['baseDomain'],'Repair','addws');
+                SetDispositionTicketWork($previousAssetID,$cfg['baseDomain']);
                 RefreshPage();
                 break;
             case 'endRepair':
                 EndAssetRelation($previousAssetID,$cfg['baseDomain'],'Repair');
+                SetDispositionReadyToDeploy($previousAssetID,$cfg['baseDomain']);
                 RefreshPage();
                 break;
             case 'endRelationships':
@@ -142,7 +143,7 @@ elseif (isset($barcodeValue) && $barcodeValue)
         $html = $html . "<h2>Please enter/scan a valid Asset Tag Barcode</h2>\n";
     }
 
-$html = $html . "<div id=\"manualButtonBox\"><a href=\"?manualAction=startRepair\">Start Repair</a>&nbsp;<a href=\"?manualAction=endRepair\">End Repair</a>&nbsp;<a href=\"?manualAction=endRelationships\">End Relationships</a>&nbsp;</div>";
+$html = $html . "<div id=\"manualButtonBox\"><a href=\"?manualAction=startRepair\"><button class=\"button button4\">Start Repair</button></a>&nbsp;<a href=\"?manualAction=endRepair\"><button class=\"button button4\">End Repair</button></a>&nbsp;<a href=\"?manualAction=endRelationships\"><button class=\"button button4\">End Relationships</button></a>&nbsp;</div>";
 
 $html = $html . "<section id=\"container\" class=\"container\">
       <div id=\"interactive\" class=\"viewport\"></div>
