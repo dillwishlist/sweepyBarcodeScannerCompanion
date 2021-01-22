@@ -20,13 +20,13 @@ $containerAssetRelationshipType = "5";
 
 switch ($manualAction)
     {
-        case startRepair:
+        case 'startRepair':
             BeginAssetRelation($assetID,$cfg['baseDomain'],'Repair','addws');
             break;
-        case endRepair:
+        case 'endRepair':
             EndAssetRelation($assetID,$cfg['baseDomain'],'Repair');
             break;
-        case endRelationships:
+        case 'endRelationships':
             EndAssetRelation($assetID,$cfg['baseDomain'],'');
             break;
         default:
