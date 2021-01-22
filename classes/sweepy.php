@@ -575,7 +575,6 @@ function UpdateCurrentDisposition($assetID,$baseDomain,$state="")
             $html = $html . "Error!";
         }
     }
-    }
 
 function UpdateAssetInventory($assetID,$assetLocation,$assetBuilding,$assetDepartment,$assetBranchoffice,$baseDomain)
     {
