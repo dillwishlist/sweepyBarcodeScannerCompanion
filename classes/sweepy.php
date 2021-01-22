@@ -565,7 +565,7 @@ function GetAssetTickets($assetID,$baseDomain)
                     $ticketArray[] = ('<a href="https://' . $baseDomain . '/helpdesk/ticket.aspx?tid=' . $row['ticketid'] . '" target="_blank>"' . $row['subject'] . '</a> &mdash; Agent: ' . $row['agentid'] . '<br />\n Opened: ' . $row['date']->format('d/m/Y') . ' Updated: ' . $row['updated']->format('d/m/Y') . ' Deadline: ' . $row['deadline']->format('d/m/Y'));
                 }
             }
-            sqlsrv_free_stmt($getAsset);
+            sqlsrv_free_stmt($getTicket);
             sqlsrv_close($conn);
             return $ticketArray;
         }
