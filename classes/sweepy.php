@@ -779,5 +779,6 @@ setcookie("inventoryBuilding",$inventoryBuilding);
 setcookie("inventoryDepartment",$inventoryDepartment);
 setcookie("inventoryBranchoffice",$inventoryBranchoffice);
 setcookie("assetRelationParentID",$assetRelationParentID);
+setcookie("assetID",$previousAssetID);
 
 ?>
