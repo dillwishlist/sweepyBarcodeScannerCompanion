@@ -84,6 +84,7 @@ elseif ($barcodeValue) {
                 InsertAssetCommentBarcodeScanTime($assetID,$cfg['baseDomain']);
                 PrintAssetInventoryInfo($cfg['baseDomain'],GetAssetInventoryInfo($assetID,$cfg['baseDomain']),$assetID);
                 PrintAssetUserRelations(GetAssetUserRelations($assetID,$cfg['baseDomain']));
+                PrintUserTickets(GetAssetTickets($assetID,$cfg['baseDomain']));
             }
         }
     }

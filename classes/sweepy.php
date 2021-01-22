@@ -444,7 +444,7 @@ function GetAssetInfo($assetId,$baseDomain)
         }
         catch(Exception $e)
         {
-            $html = $html . "Error!";
+            $html = $html . "<h1>Error!</h1>";
         }
     }
 
@@ -489,7 +489,7 @@ function GetAssetUserRelations($assetId,$baseDomain)
             while ($row = sqlsrv_fetch_array($getAsset))
                 {
                     Alert($row);
-                    $relationsArray[] = ('<a href="https://' . $baseDomain . '/user.aspx?username=' . $row['Username'] . '&userdomain=orcsd" target="_blank">' . $row['Username'] . '</a> Since ' . date_format($row['StartDate'], 'Y-m-d') . ' through ' . date_format($row['EndDate'], 'Y-m-d') . ' Comments: ' . $row['Comments'] . '');
+                    $relationsArray[] = ('<a href="https://' . $baseDomain . '/user.aspx?username=' . $row['Username'] . '&userdomain=orcsd" target="_blank">' . $row['Username'] . '</a> Since ' . date_format($row['StartDate'], 'Y-m-d') . ' through ' . date_format($row['EndDate'], 'Y-m-d') . ' <br \> ' . $row['Comments'] . '');
 //                    $assetName,$assetLocation,$assetBuilding,$assetDepartment,$assetBranchOffice
                 }
             sqlsrv_free_stmt($getAsset);
@@ -541,6 +541,70 @@ function GetAssetType($assetID,$baseDomain)
             }
             sqlsrv_free_stmt($getAsset);
             sqlsrv_close($conn);
+        }
+        catch(Exception $e)
+        {
+            $html = $html . "Error!";
+        }
+    }
+
+// List open tickets that are directly associated with this asset.
+function GetAssetTickets($assetID,$baseDomain)
+    {
+        global $html;
+        $ticketArray = array();
+        try
+        {
+            $conn = OpenConnection($baseDomain);
+            $tsql = "select htblticket.ticketid,htblticket.subject,htblticket.date,htblticket.ticketstateid,htblticket.agentid,htblticket.tickettypeid,htblticket.deadline,htblticket.updated,htblticket.lastuserreply from htblticket left join htblticketasset on htblticket.ticketid = htblticketasset.ticketid where htblticket.ticketstateid != 1 AND htblticketasset.assetid = " . $assetID;
+            $getTicket = sqlsrv_query($conn, $tsql);
+            if ($getTicket == FALSE)
+                die(sqlsrv_errors());
+            while ($row = sqlsrv_fetch_array($getTicket)) {
+                foreach($row as $field) {
+                    $ticketArray[] = ('<a href="https://' . $basedomain . '/helpdesk/ticket.aspx?tid=' . $row['ticketid'] . '" target="_blank>"' . $row['subject'] . '</a> &mdash; Agent: ' . $row['agentId'] . '<br />\n Opened: ' . $row['date'] . ' Updated: ' . $row['updated'] . ' Deadline: ' . $row['deadline']);
+                }
+            }
+            sqlsrv_free_stmt($getAsset);
+            sqlsrv_close($conn);
+            return $ticketArray;
+        }
+        catch(Exception $e)
+        {
+            $html = $html . "Error!";
+        }
+    }
+
+//Print Out Tickets
+function PrintUserTickets($ticketArray)
+    {
+        global $html;
+        if(debug){print_r($ticketArray);}
+        foreach($ticketArray as $field) {
+            $html = $html . "<h3>" . $field . "</h3>\n";
+        }
+    }
+
+// Get open tickets that are related to this asset via a custom field, but not hard linked to a ticket yet.
+function GetAssetSoftRelatedTickets($assetID,$baseDomain)
+    {
+        global $html;
+        $ticketArray = array();
+        try
+        {
+            $conn = OpenConnection($baseDomain);
+            $tsql = "select htblticket.ticketid,htblticket.subject,htblticket.date,htblticket.ticketstateid,htblticket.agentid,htblticket.tickettypeid,htblticket.deadline,htblticket.updated,htblticket.lastuserreply from htblticket left join htblticketasset on htblticket.ticketid = htblticketasset.ticketid left join htblticketcustomfield on htblticket.ticketid = htblticketcustomfield.ticketid where htblticketcustomfield.fieldid = 53 AND htblticket.ticketstateid != 1 AND htblticketcustomfield.data LIKE " . $assetID;
+            $getTicket = sqlsrv_query($conn, $tsql);
+            if ($getTicket == FALSE)
+                die(sqlsrv_errors());
+            while ($row = sqlsrv_fetch_array($getTicket)) {
+                foreach($row as $field) {
+                    $ticketArray[] = ('<a href="https://' . $basedomain . '/helpdesk/ticket.aspx?tid=' . $row['ticketid'] . '" target="_blank>"' . $row['subject'] . '</a> &mdash; Agent: ' . $row['agentId'] . '<br />\n Opened: ' . $row['date'] . ' Updated: ' . $row['updated'] . ' Deadline: ' . $row['deadline']);
+                }
+            }
+            sqlsrv_free_stmt($getAsset);
+            sqlsrv_close($conn);
+            return $ticketArray;
         }
         catch(Exception $e)
         {
