@@ -353,6 +353,12 @@ function PrintAssetInventoryInfo($baseLSURL,$assetInfoArray,$assetID)
         $html = $html . "<p>Last Physical Inventory: " . $assetInfoArray[6] . "</p>\n";
     }
 
+function PrintAssetNameOnly($baseLSURL,$assetInfoArray,$assetID)
+    {
+        if(debug){print_r($assetInfoArray);}
+        echo($assetInfoArray[0]);
+    }
+
 function PrintAssetUserRelations($relationsArray)
     {
         global $html;
