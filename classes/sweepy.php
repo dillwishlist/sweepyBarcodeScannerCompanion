@@ -650,6 +650,51 @@ function InsertAssetCommentBarcodeScanTime($assetID,$baseDomain,$comment="Barcod
         }
     }
 
+function EndAssetRelation($assetID,$baseDomain,$commentContains="")
+    {
+        global $html;
+        
+        $commentString = "";
+        
+        if ($commentContains != "")
+            {
+                $commentString = ("AND dbo.tblAssetUserRelations.Comments like '%" . $commentContains . "%' ");
+            }
+        try
+        {
+            $conn = OpenConnection($baseDomain);
+            $tsql = "update dbo.tblAssetUserRelations set EndDate=CURRENT_TIMESTAMP where dbo.tblAssetUserRelations.EndDate IS NULL " . $commentString . "AND dbo.tblAssetUserRelations.AssetID = " . $assetID;
+            $getAsset = sqlsrv_query($conn, $tsql);
+            if ($getAsset == FALSE)
+                die(sqlsrv_errors());
+            sqlsrv_free_stmt($getAsset);
+            sqlsrv_close($conn);
+            InsertAssetCommentBarcodeScanTime($assetID,$baseDomain,$comment="Asset/User Relationship Ended.");
+        }
+        catch(Exception $e)
+        {
+            $html = $html . "Error!";
+        }
+    }
+
+function BeginAssetRelation($assetID,$baseDomain,$commentContains="",$userName="addws")
+    {
+        {
+            $conn = OpenConnection($baseDomain);
+            $tsql = "insert into dbo.tblAssetUserRelations (Username, Userdomain, AssetID, Type, Comments) values ('" . $userName . "','ORCSD'," . $assetID . ",12,'" . $commentContains . "')"
+            $setAssetRelation = sqlsrv_query($conn, $tsql);
+            if ($setAssetRelation == FALSE)
+                die(sqlsrv_errors());
+            sqlsrv_free_stmt($setAssetRelation);
+            sqlsrv_close($conn);
+            InsertAssetCommentBarcodeScanTime($assetID,$baseDomain,$comment=("Asset/User Relationship Began: " . $userName . " " . $commentContains));
+        }
+        catch(Exception $e)
+        {
+            $html = $html . "Error!";
+        }
+    }
+
 /*function PrintAssetInventoryInfo($assetInfoArray)
     {
         global $html;
