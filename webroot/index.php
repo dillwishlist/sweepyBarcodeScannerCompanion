@@ -2,7 +2,15 @@
 
     require_once '../classes/sweepy.php';
 
-    $barcodeValue = (isset($_REQUEST["barcodeValue"])?$_REQUEST["barcodeValue"]:"");
+
+if isset($_REQUEST["barcodeValue"])
+    {
+        $barcodeValue = (isset($_REQUEST["barcodeValue"])?$_REQUEST["barcodeValue"]:"");
+    }
+    elseif isset($previousAssetID)
+    {
+        $barcodeValue = $previousAssetID;
+    }
 
 $html = $html . "
 <h3>Sweepy Barcode Scanner Companion</h3>
@@ -92,12 +100,15 @@ elseif ($barcodeValue) {
             {
                 case 'startRepair':
                     BeginAssetRelation($previousAssetID,$cfg['baseDomain'],'Repair','addws');
+                    RefreshPage();
                     break;
                 case 'endRepair':
                     EndAssetRelation($previousAssetID,$cfg['baseDomain'],'Repair');
+                    RefreshPage();
                     break;
                 case 'endRelationships':
                     EndAssetRelation($previousAssetID,$cfg['baseDomain'],'');
+                    RefreshPage();
                     break;
                 default:
             }

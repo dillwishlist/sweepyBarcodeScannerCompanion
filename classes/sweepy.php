@@ -737,6 +737,10 @@ function BeginAssetRelation($assetID,$baseDomain,$commentContains="",$userName="
         $html = $html . "<p>Branch Office:" . $assetInfoArray[4] . "</p>\n";
     }*/
 
+function RefreshPage()
+	{
+	    window.location = window.location.pathname;
+	}
 
 function InsertAssetCommentAuditTrail($assetID,$baseDomain,$inventoryInfoArray,$isNew)
     {
