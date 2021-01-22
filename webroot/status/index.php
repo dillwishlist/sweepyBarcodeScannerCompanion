@@ -21,10 +21,22 @@ $containerAssetRelationshipType = "5";
 
 if ($serialValue) {
 	$assetID = GetAssetIDBySerial($serialValue,$cfg['baseDomain']);
-	$html = $html . "<script type=\"text/javascript\">startFadeDec(50, 255, 50, 255, 255, 255, 20);</script>\n";
 	if ($assetID) {
 		PrintAssetInventoryInfo($cfg['baseDomain'],GetAssetInventoryInfo($assetID,$cfg['baseDomain']),$assetID);
-		PrintAssetUserRelations(GetAssetUserRelations($assetID,$cfg['baseDomain']));
+        echo("<h2>User Relationships</h2>\n<hr />");
+        PrintAssetUserRelations(GetAssetUserRelations($assetID,$cfg['baseDomain']));
+        echo("<h2>Open Tickets</h2>\n<hr />");
+        $tickets = array();
+        $tickets = array_unique(GetAssetTickets($assetID,$cfg['baseDomain']))
+        PrintUserTickets($tickets);
+        if (count($tickets) == 0)
+            {
+                $html = $html . "<script type=\"text/javascript\">startFadeDec(50, 255, 50, 255, 255, 255, 20);</script>\n";
+            }
+            else
+            {
+                $html = $html . "<script type=\"text/javascript\">startFadeDec(50, 255, 255, 255, 255, 255, 20);</script>\n";
+            }
 	}
 	else
 		{
