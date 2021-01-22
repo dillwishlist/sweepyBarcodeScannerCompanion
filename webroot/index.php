@@ -91,13 +91,13 @@ elseif ($barcodeValue) {
         switch ($manualAction)
             {
                 case 'startRepair':
-                    BeginAssetRelation($assetID,$cfg['baseDomain'],'Repair','addws');
+                    BeginAssetRelation($previousAssetID,$cfg['baseDomain'],'Repair','addws');
                     break;
                 case 'endRepair':
-                    EndAssetRelation($assetID,$cfg['baseDomain'],'Repair');
+                    EndAssetRelation($previousAssetID,$cfg['baseDomain'],'Repair');
                     break;
                 case 'endRelationships':
-                    EndAssetRelation($assetID,$cfg['baseDomain'],'');
+                    EndAssetRelation($previousAssetID,$cfg['baseDomain'],'');
                     break;
                 default:
             }

@@ -58,6 +58,15 @@
         $assetRelationParentID = '';
     }
 
+    if (key_exists('assetID',$_COOKIE))
+        {
+            $previousAssetID = $_COOKIE['assetID'];
+        } else {
+            $previousAssetID = '';
+        }
+
+
+
     if (key_exists('manualAction',$_COOKIE))
         {
             $manualAction = $_COOKIE['manualAction'];
@@ -401,6 +410,7 @@ function GetAssetID($barcodeValue,$baseDomain)
             while ($row = sqlsrv_fetch_array($getAsset)) {
                 foreach($row as $field) {
                     Alert($field);
+                    setcookie("assetID",$field);
                     return(htmlspecialchars($field));
                 }
             }
@@ -426,12 +436,12 @@ function GetAssetIDBySerial($serialValue,$baseDomain)
             if ($getAsset == FALSE)
                 die(sqlsrv_errors());
             Alert($getAsset);
-			while ($row = sqlsrv_fetch_array($getAsset)) {
-				foreach($row as $field) {
-			        Alert($field);
-					return(htmlspecialchars($field));
-				}
-			}
+            while ($row = sqlsrv_fetch_array($getAsset)) {
+                foreach($row as $field) {
+                    Alert($field);
+                    return(htmlspecialchars($field));
+                }
+            }
             sqlsrv_free_stmt($getAsset);
             sqlsrv_close($conn);
         }
@@ -764,6 +774,5 @@ setcookie("inventoryBuilding",$inventoryBuilding);
 setcookie("inventoryDepartment",$inventoryDepartment);
 setcookie("inventoryBranchoffice",$inventoryBranchoffice);
 setcookie("assetRelationParentID",$assetRelationParentID);
-
 
 ?>
