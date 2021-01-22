@@ -44,16 +44,8 @@ if ($serialValue) {
 			$html = $html . "<script type=\"text/javascript\">startFadeDec(255, 50, 50, 255, 255, 255, 20);</script>\n";
 
 		}
-} else { $html = $html . "<h2>Please enter/scan a valid Asset Tag Barcode</h2>\n"; }
+} else { $html = $html . "<h2>Invalid Entry</h2>\n"; }
 
-$html = $html . "<section id=\"container\" class=\"container\">
-	<div id=\"interactive\" class=\"viewport\"></div>
-	</section>
-	<script src=\"/quaggaJS/example/vendor/jquery-1.9.0.min.js\" type=\"text/javascript\"></script>
-	<script src=\"//webrtc.github.io/adapter/adapter-latest.js\" type=\"text/javascript\"></script>
-	<script src=\"/quaggaJS/dist/quagga.js\" type=\"text/javascript\"></script>
-	<script src=\"/scripts/scanScript.js\" type=\"text/javascript\"></script>
-";
 
 echo($html);
 
